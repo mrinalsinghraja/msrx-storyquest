@@ -1,0 +1,13 @@
+@import "tailwindcss";
+@import "preline/variants.css";
+@import "katex/dist/katex.min.css";
+
+@layer base {
+  html,
+  body {
+    height: 100dvh;
+    overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+}
