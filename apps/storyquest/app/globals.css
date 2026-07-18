@@ -1,13 +1,110 @@
 @import "tailwindcss";
-@import "preline/variants.css";
 @import "katex/dist/katex.min.css";
 
+/**
+ * MSRX design tokens.
+ *
+ * Values match the portal (www.msrx.co.in) so StoryQuest reads as part of the
+ * same family as QR Studio, GraphIQ and JEE HyperLab. Light-only, like every
+ * other MSRX web app — including the lab canvas, which follows HyperLab.
+ */
+:root {
+  --background: #ffffff;
+  --surface: #f5f5f7;
+  --surface-hover: #f0f0f2;
+  --border: rgba(0, 0, 0, 0.06);
+  --border-strong: rgba(0, 0, 0, 0.10);
+  --text-primary: #1d1d1f;
+  --text-secondary: #6e6e73;
+  --text-tertiary: #a1a1a6;
+  --accent-cyan: #00c4df;
+  --accent-purple: #8b5cf6;
+  --shadow-card: 0 2px 20px rgba(0, 0, 0, 0.06);
+  --shadow-card-hover: 0 8px 40px rgba(0, 0, 0, 0.10);
+}
+
+@theme inline {
+  --font-sans: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --color-msrx-cyan: #00c4df;
+  --color-msrx-purple: #8b5cf6;
+  --color-ink: #1d1d1f;
+  --color-ink-2: #6e6e73;
+  --color-ink-3: #a1a1a6;
+  --color-surface: #f5f5f7;
+}
+
+* {
+  box-sizing: border-box;
+}
+
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
   html,
   body {
-    height: 100dvh;
-    overflow: hidden;
+    min-height: 100%;
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
+  }
+
+  body {
+    background: var(--background);
+    color: var(--text-primary);
+    line-height: 1.6;
+    overscroll-behavior-y: none;
+  }
+
+  ::selection {
+    background: rgba(0, 196, 223, 0.22);
+    color: #06323a;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+}
+
+@layer utilities {
+  .msrx-gradient {
+    background: linear-gradient(135deg, #00c4df 0%, #8b5cf6 100%);
+  }
+
+  .msrx-gradient-text {
+    background: linear-gradient(135deg, #00c4df 0%, #8b5cf6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .nav-blur {
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    background: rgba(255, 255, 255, 0.85);
+  }
+
+  .card-hover {
+    transition: box-shadow 0.25s ease, transform 0.25s ease;
+  }
+
+  .card-hover:hover {
+    box-shadow: var(--shadow-card-hover);
+    transform: translateY(-2px);
+  }
+
+  .surface-grid {
+    background-image:
+      linear-gradient(rgba(0, 0, 0, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 0, 0, 0.035) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  .premium-ring {
+    box-shadow: var(--shadow-card);
+  }
+
+  .focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00c4df] focus-visible:ring-offset-2 focus-visible:ring-offset-white;
   }
 }

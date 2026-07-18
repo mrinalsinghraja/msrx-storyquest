@@ -1,0 +1,16 @@
+node_modules/
+.next/
+.vercel/
+out/
+.env
+.env.local
+.env.*.local
+!.env.example
+npm-debug.log*
+.vercel
+
+# local tooling
+.claude/
+
+# macOS
+.DS_Store
