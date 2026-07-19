@@ -11,7 +11,7 @@ const mathematics = [
     lab: 'ratio',
     formula: 'a : b = c : x',
     scenario: 'a concrete mixer on a bridge repair with one bag of cement left',
-    crisis: 'The mix is specified 3 parts cement to 5 parts sand. There are 12 units of cement in the hopper and the sand feed is set wrong.',
+    crisis: 'The mix is coming out weak. It is specified 3 parts cement to 5 parts sand, there are 12 units of cement in the hopper, and the sand feed is set wrong.',
     insight: 'A ratio is a rule about relative size, not fixed amounts. Scale both sides together and the mix stays correct.',
     resolution: 'At the solved sand quantity the mix holds the 3:5 rule exactly and the pour goes ahead.',
     model: {
@@ -32,7 +32,7 @@ const mathematics = [
     lab: 'ratio',
     formula: 'y = kx',
     scenario: 'a water pump costed by the hour for a drought response',
-    crisis: 'The pump moves 2.4 kL per hour and the reservoir needs 42 kL before nightfall. The runtime booked is wrong.',
+    crisis: 'The reservoir will not be full by nightfall. It needs 42 kL, the pump moves 2.4 kL per hour, and the runtime booked is wrong.',
     insight: 'In direct proportion the ratio never changes. Double the hours and you double the water, exactly.',
     resolution: 'At the solved runtime the pump delivers precisely 42 kL.',
     model: {
@@ -53,7 +53,7 @@ const mathematics = [
     lab: 'fraction',
     formula: '\\frac{part}{whole}',
     scenario: 'a relief warehouse splitting 64 pallets between two districts',
-    crisis: 'The larger district must receive 40 pallets. The fraction written on the dispatch order is wrong.',
+    crisis: 'The larger district is being short-changed. It must receive 40 pallets, and the fraction written on the dispatch order is wrong.',
     insight: 'A fraction is a division waiting to happen. It tells you which slice of the whole you are taking.',
     resolution: 'At the solved fraction the split gives exactly 40 pallets to the larger district.',
     model: {
@@ -74,7 +74,7 @@ const mathematics = [
     lab: 'coordinate',
     formula: 'ax = c',
     scenario: 'a ferry loading ramp rated by axle weight',
-    crisis: 'Each vehicle loads 4 tonnes onto the ramp. The ramp is certified to exactly 68 tonnes and the vehicle count is wrong.',
+    crisis: 'The ramp is loaded past its certificate. It is rated to exactly 68 tonnes, each vehicle puts 4 tonnes on it, and the vehicle count is wrong.',
     insight: 'Solving an equation means undoing what was done to the unknown, in reverse order.',
     resolution: 'At the solved vehicle count the ramp carries exactly its certified load.',
     model: {
@@ -95,7 +95,7 @@ const mathematics = [
     lab: 'coordinate',
     formula: 'd^2 = x^2 + y^2',
     scenario: 'a drone flying a straight line to a stranded hiker',
-    crisis: 'The hiker is 6 km east of the launch point. The drone has fuel for exactly 10 km of straight-line flight, and the north offset is wrong.',
+    crisis: 'The drone will run dry before it reaches the hiker. He is 6 km east of the launch point, the drone has fuel for exactly 10 km of straight-line flight, and the north offset is wrong.',
     insight: 'On a grid, straight-line distance is never the sum of the legs. It is the diagonal, and it is always shorter.',
     resolution: 'At the solved north offset the direct distance is exactly 10 km, at the edge of the fuel range.',
     model: {
@@ -116,7 +116,7 @@ const mathematics = [
     lab: 'coordinate',
     formula: 'm = \\frac{\\Delta y}{\\Delta x}',
     scenario: 'a wheelchair ramp being designed for a village clinic',
-    crisis: 'The regulation gradient is 0.75 over the available 12 m run. The proposed rise does not match it.',
+    crisis: 'The ramp will fail inspection. The regulation gradient is 0.75 over the available 12 m run, and the proposed rise does not match it.',
     insight: 'Gradient is rise divided by run. A steeper line covers more height in the same horizontal distance.',
     resolution: 'At the solved rise the ramp sits exactly on the 0.75 gradient the regulation requires.',
     model: {
@@ -137,7 +137,7 @@ const mathematics = [
     lab: 'ratio',
     formula: 'scale = \\frac{drawing}{actual}',
     scenario: 'an evacuation floor plan being redrawn for a school wall',
-    crisis: 'The corridor is 45 m long and the plan uses 0.4 cm per metre. The drawn length is wrong, so the exits sit in the wrong place.',
+    crisis: 'The exits are drawn in the wrong place. The corridor is 45 m long, the plan uses 0.4 cm per metre, and the drawn length is wrong.',
     insight: 'A scale drawing keeps every proportion. Get one length wrong and every distance derived from it is wrong too.',
     resolution: 'At the solved drawn length the plan is faithful and the exits land correctly.',
     model: {
@@ -158,7 +158,7 @@ const mathematics = [
     lab: 'ratio',
     formula: '\\frac{a}{b} = \\frac{a\'}{b\'}',
     scenario: 'a replacement sail being cut from a photograph of the original',
-    crisis: 'The original measured 8 m by 12 m. The new luff is 14 m and the matching edge is cut wrong, so the sail sets badly.',
+    crisis: 'The sail sets badly. The original measured 8 m by 12 m, the new luff is 14 m, and the matching edge is cut wrong.',
     insight: 'Similar shapes share angles and scale every length by the same factor. One wrong side breaks the similarity.',
     resolution: 'At the solved edge length the new sail is truly similar to the original.',
     model: {
@@ -179,7 +179,7 @@ const mathematics = [
     lab: 'geometry',
     formula: '\\sum\\theta = 180^\\circ',
     scenario: 'a roof truss being cut on site with one angle unmarked',
-    crisis: 'Two angles of the triangle measure 112° together. The third is cut wrong and the truss will not close.',
+    crisis: 'The truss will not close. Two angles of the triangle measure 112° together, and the third is cut wrong.',
     insight: 'Every triangle, no matter its shape, holds exactly 180° inside it. That is what makes the third angle knowable.',
     resolution: 'At the solved angle the triangle closes exactly and the truss seats flush.',
     model: {
@@ -200,7 +200,7 @@ const mathematics = [
     lab: 'triangle',
     formula: 'a^2 + b^2 = c^2',
     scenario: 'a radio mast held by a guy wire on a rocky slope',
-    crisis: 'The anchor sits 9 m from the base and the wire is exactly 15 m long. The attachment height on the mast is wrong.',
+    crisis: 'The wire is being fixed to the wrong point on the mast. The anchor sits 9 m from the base, and the wire is exactly 15 m long.',
     insight: 'In a right triangle the two shorter sides squared always add to the longest side squared. No measurement needed for the third.',
     resolution: 'At the solved attachment height the wire is exactly 15 m taut and the mast is stable.',
     model: {
@@ -221,7 +221,7 @@ const mathematics = [
     lab: 'triangle',
     formula: 'd^2 = x^2 + y^2',
     scenario: 'a supply run cutting diagonally across a flooded grid of streets',
-    crisis: 'The depot is 20 blocks west. The vehicle has range for a 29 block diagonal, and the north leg is planned wrong.',
+    crisis: 'The vehicle will not make it back. The depot is 20 blocks west, the vehicle has range for a 29 block diagonal, and the north leg is planned wrong.',
     insight: 'The diagonal is always shorter than going around, but it grows fast — squares add, not lengths.',
     resolution: 'At the solved north leg the diagonal is exactly 29 blocks and the run is inside range.',
     model: {
@@ -242,7 +242,7 @@ const mathematics = [
     lab: 'circle',
     formula: 'C = 2\\pi r',
     scenario: 'a water tank being wrapped with a fixed length of insulation',
-    crisis: 'There is exactly 44 m of insulating band. The tank radius on the order form is wrong, so the band will not meet.',
+    crisis: 'The band will not meet around the tank. There is exactly 44 m of insulating band, and the tank radius on the order form is wrong.',
     insight: 'Circumference grows in a straight line with radius, and the constant linking them is always π.',
     resolution: 'At the solved radius the circumference is exactly 44 m and the band closes.',
     model: {
@@ -263,7 +263,7 @@ const mathematics = [
     lab: 'area',
     formula: '\\varphi = \\frac{1+\\sqrt5}{2}',
     scenario: 'a museum frame being cut to the proportions of the painting inside',
-    crisis: 'The long side is fixed at 16.18 cm. The short side is cut wrong, so the frame reads visibly off-balance.',
+    crisis: 'The frame reads visibly off-balance. The long side is fixed at 16.18 cm, and the short side is cut wrong.',
     insight: 'The golden ratio is a proportion, not a magic number. It shows up wherever a whole relates to its larger part the way that part relates to the smaller.',
     resolution: 'At the solved short side the frame sits exactly on φ and the proportion reads correct.',
     model: {
@@ -284,7 +284,7 @@ const mathematics = [
     lab: 'numberline',
     formula: '(x, y) \\rightarrow (x + a, y + b)',
     scenario: 'a survey dataset logged against the wrong origin marker',
-    crisis: 'Every point sits at -14 on the east axis but should read 23. The correction offset applied is wrong.',
+    crisis: 'The whole survey is offset. Every point sits at -14 on the east axis but should read 23, and the correction applied is wrong.',
     insight: 'A translation slides every point by the same amount. Shape and size never change, only position.',
     resolution: 'At the solved offset every logged point lands on its true coordinate.',
     model: {
@@ -305,7 +305,7 @@ const mathematics = [
     lab: 'mirror',
     formula: 'x\' = 2a - x',
     scenario: 'a stage lighting rig being mirrored to the opposite wing',
-    crisis: 'A fixture sits at position 8. Its mirror must land at 26, and the mirror line is set wrong.',
+    crisis: 'The mirrored fixture lands in the wrong place. The original sits at position 8, its mirror must land at 26, and the mirror line is set wrong.',
     insight: 'A reflection sits exactly as far past the mirror line as the original sits before it. The line is always halfway between.',
     resolution: 'At the solved mirror line the fixture reflects precisely onto 26.',
     model: {
@@ -326,7 +326,7 @@ const mathematics = [
     lab: 'probability',
     formula: 'P(A) = \\frac{favourable}{total}',
     scenario: 'a raffle for a community solar panel with a promised win rate',
-    crisis: '40 tickets are in the drum. The organisers promised a 0.35 chance of drawing a winner, and the winning ticket count is wrong.',
+    crisis: 'The organisers cannot honour what they promised. 40 tickets are in the drum, they promised a 0.35 chance of drawing a winner, and the winning ticket count is wrong.',
     insight: 'Probability is a ratio between 0 and 1. It says how much of the whole outcome space counts as success.',
     resolution: 'At the solved winner count the draw offers exactly the promised 0.35 chance.',
     model: {
@@ -347,7 +347,7 @@ const mathematics = [
     lab: 'data',
     formula: '\\bar{x} = \\frac{\\sum x}{n}',
     scenario: 'a rainfall station filing a monthly average with one day missing',
-    crisis: 'Five days read 38, 56, 72, 64 and 44 mm. The month must average 55 mm, and the missing day is logged wrong.',
+    crisis: 'The month will not average out. Five days read 38, 56, 72, 64 and 44 mm, the month must average 55 mm, and the missing day is logged wrong.',
     insight: 'The mean is a balance point. One unusual value can drag it a long way, especially in a small sample.',
     resolution: 'At the solved value for the missing day the six-day mean lands exactly on 55 mm.',
     model: {
@@ -368,7 +368,7 @@ const mathematics = [
     lab: 'data',
     formula: 'range = max - min',
     scenario: 'a cold chain audit on a vaccine shipment',
-    crisis: 'The lowest logged temperature was 18. The highest reading must be 65 for the audit to reconstruct, and the recorded range is wrong.',
+    crisis: 'The audit cannot reconstruct the record. The lowest logged temperature was 18, the highest reading must be 65, and the recorded range is wrong.',
     insight: 'Range only looks at the two extremes. It says how wide the data is, not how it is distributed inside.',
     resolution: 'At the solved range the reconstructed maximum lands exactly on 65.',
     model: {
@@ -396,7 +396,7 @@ const mathematics = [
      * the sequence. Shifted the whole scheme down by 2 m: the climb is still
      * 56 m, the step is still 7 m, and nothing in the model changed.
      */
-    crisis: 'The first terrace sits at 5 m elevation and the ninth must reach 61 m. The step between terraces is wrong.',
+    crisis: 'The terraces will not reach the top of the slope. The first sits at 5 m elevation, the ninth must reach 61 m, and the step between them is wrong.',
     insight: 'An arithmetic sequence adds the same amount each time. Knowing any two terms fixes the whole pattern.',
     resolution: 'At the solved step the ninth terrace lands exactly on 61 m.',
     model: {
@@ -417,7 +417,7 @@ const mathematics = [
     lab: 'numberline',
     formula: 'a + x = b',
     scenario: 'a submersible logging depth against a shifting sea-level datum',
-    crisis: 'The craft reads -23 m on the old datum and must read -8 m on the new one. The correction applied is wrong.',
+    crisis: 'The craft is reading the wrong depth on the new datum. It reads -23 m on the old one and must read -8 m on the new, and the correction applied is wrong.',
     insight: 'Negative numbers are directions, not just smaller numbers. Adding a positive to a negative moves you toward zero.',
     resolution: 'At the solved correction the depth log reads -8 m exactly.',
     model: {
@@ -438,7 +438,7 @@ const mathematics = [
     lab: 'balance',
     formula: 'L = R',
     scenario: 'a budget reconciliation for a school science fund',
-    crisis: 'Confirmed spending is 29 units against a 74 unit ledger total. The outstanding commitment is entered wrong.',
+    crisis: 'The ledger will not reconcile. Confirmed spending is 29 units against a 74 unit ledger total, and the outstanding commitment is entered wrong.',
     insight: 'An equation is a balance. Whatever you do to one side you must do to the other, or the truth breaks.',
     resolution: 'At the solved commitment both sides read 74 and the ledger reconciles.',
     model: {
@@ -459,7 +459,7 @@ const mathematics = [
     lab: 'numberline',
     formula: 'ax \\le c',
     scenario: 'a lift with a strict load limit in a hospital tower',
-    crisis: 'Each crate weighs 4 units and the limit is 92 units. The boundary crate count is set wrong, so the alarm keeps firing.',
+    crisis: 'The alarm keeps firing. Each crate weighs 4 units, the limit is 92 units, and the boundary crate count is set wrong.',
     insight: 'An inequality marks a boundary, not a single answer. Everything on one side of it is allowed.',
     resolution: 'At the solved boundary count the lift sits exactly on its limit, the last safe load.',
     model: {
@@ -480,7 +480,7 @@ const mathematics = [
     lab: 'area',
     formula: 'A = lw',
     scenario: 'a tarpaulin being cut to cover a damaged grain store',
-    crisis: 'The store needs 252 m² of cover and the tarp is 14 m along its fixed edge. The cut width is wrong.',
+    crisis: 'The tarp will not cover the store. The store needs 252 m², the tarp is 14 m along its fixed edge, and the cut width is wrong.',
     insight: 'Area is a product of two lengths, so it grows twice as fast as either one. Doubling both quadruples the area.',
     resolution: 'At the solved width the tarp covers exactly 252 m².',
     model: {
@@ -501,7 +501,7 @@ const mathematics = [
     lab: 'volume',
     formula: 'V = A_{base} h',
     scenario: 'a rainwater cistern being sized for a rooftop garden',
-    crisis: 'The cistern must hold 1080 L and its base area is fixed at 72 dm². The planned height is wrong.',
+    crisis: 'The cistern comes up short. It must hold 1080 L, its base area is fixed at 72 dm², and the planned height is wrong.',
     insight: 'Volume is area multiplied by height. Scaling every dimension by two multiplies volume by eight, not two.',
     resolution: 'At the solved height the cistern holds exactly 1080 L.',
     model: {
@@ -522,7 +522,7 @@ const mathematics = [
     lab: 'coordinate',
     formula: 'y = f(x)',
     scenario: 'a clinic reading a dosage chart it cannot afford to misread',
-    crisis: 'The chart rises 3.5 units of dose per kilogram of body mass. The prescribed dose is 91 units and the mass read off the axis is wrong.',
+    crisis: 'The dose is being read off the wrong point on the axis. The chart rises 3.5 units of dose per kilogram of body mass, and the prescribed dose is 91 units.',
     insight: 'A graph is a picture of a relationship. Reading it means moving between the axes, not just looking at the line.',
     resolution: 'At the solved body mass the chart gives exactly the 91 unit dose.',
     model: {
@@ -873,7 +873,7 @@ const mathematics = [
     lab: 'fraction',
     formula: '\\text{price} \\times (1 - d) = \\text{sale}',
     scenario: 'a shop repricing stock for an end-of-season sale',
-    crisis: 'A jacket marked at 2 400 rupees has to ring up at 1 800 at the till. The discount entered into the register is wrong.',
+    crisis: 'The jacket is ringing up at the wrong price. It is marked at 2 400 rupees and has to come to 1 800 at the till, and the discount entered into the register is wrong.',
     insight: 'A percentage is a fraction of the original, not a fixed amount. The same percentage takes more off a dearer item.',
     resolution: 'At the solved discount the till rings the jacket at exactly the sale price.',
     standardIds: ['cbse:7:8', 'uk:KS3:percentages'],
@@ -939,7 +939,7 @@ const mathematics = [
     lab: 'circle',
     formula: 'C = 2\\pi r',
     scenario: 'a cycle shop calibrating a distance meter to a wheel',
-    crisis: 'The meter counts revolutions and expects 2.198 m per turn. The wheel radius entered into the setup screen is wrong.',
+    crisis: 'The meter is counting the wrong distance. It expects 2.198 m per turn, and the wheel radius entered into the setup screen is wrong.',
     insight: 'Circumference grows in direct proportion to radius, with pi as the fixed constant of that proportion.',
     resolution: 'At the solved radius each revolution covers exactly the distance the meter assumes.',
     standardIds: ['cbse:7:11', 'igcse:4.1'],
@@ -1027,7 +1027,7 @@ const mathematics = [
     lab: 'volume',
     formula: 'V = \\pi r^2 h',
     scenario: 'a dairy sizing a cylindrical chilling vat',
-    crisis: 'The vat floor is fixed at 3.14 m² and the plant needs 6.28 m³ of capacity. The wall height ordered from the fabricator is wrong.',
+    crisis: 'The vat will not hold what the plant needs. Its floor is fixed at 3.14 m², the plant needs 6.28 m³ of capacity, and the wall height ordered from the fabricator is wrong.',
     insight: 'Volume is base area multiplied by height. Widening a tank buys capacity far faster than raising it, because area goes as radius squared.',
     resolution: 'At the solved height the vat holds exactly the capacity the plant requires.',
     standardIds: ['cbse:9:13', 'igcse:4.4'],
@@ -1049,7 +1049,7 @@ const mathematics = [
     lab: 'coordinate',
     formula: 'm = \\frac{y_2 - y_1}{x_2 - x_1}',
     scenario: 'a surveyor setting the fall on a drainage run',
-    crisis: 'The run covers 24 m horizontally and the code demands a gradient of 0.025. The fall pegged at the far end does not match.',
+    crisis: 'The drain will not fall to code. The run covers 24 m horizontally, the code demands a gradient of 0.025, and the fall pegged at the far end does not match.',
     insight: 'Gradient is rise over run. A shallow gradient over a long run still adds up to a real drop.',
     resolution: 'At the solved fall the drainage run sits exactly on the code gradient.',
     standardIds: ['cbse:10:7', 'igcse:3.2'],
@@ -1137,7 +1137,7 @@ const mathematics = [
     lab: 'area',
     formula: '\\frac{a}{b} = \\frac{c}{d}',
     scenario: 'an engineering fair building a scale model of a river bridge',
-    crisis: 'The real bridge spans 96 m and the model is built at 1 cm to 8 m. The deck length cut for the model does not match the scale.',
+    crisis: 'The model deck is cut to the wrong length. The real bridge spans 96 m, and the model is built at 1 cm to 8 m.',
     insight: 'A scale model keeps every ratio the same. One fixed factor links every real length to its model counterpart.',
     resolution: 'At the solved model length the deck sits exactly at the stated scale.',
     standardIds: ['cbse:7:12', 'igcse:4.1'],
