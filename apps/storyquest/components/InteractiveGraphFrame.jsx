@@ -302,14 +302,27 @@ function LungsLab({ value, accent, controlText, leftText }) {
 function OsmosisLab({ value, accent, arrowId, controlText, leftText }) {
   const inside = Math.round(value / 7);
   const outside = 14 - inside;
-  const dotGroup = (amount, startX, color) => Array.from({ length: amount }, (_, index) => <circle key={index} cx={startX + (index % 4) * 16} cy={126 + Math.floor(index / 4) * 28} r="5" fill={color} />);
+  // `--drift-i` staggers each solute so the group reads as independent
+  // particles rather than one block sliding. The animation itself lives in
+  // globals.css; nothing here knows about timing.
+  const dotGroup = (amount, startX, color, phase) => Array.from({ length: amount }, (_, index) => (
+    <circle
+      key={index}
+      className="particle-drift"
+      style={{ '--drift-i': index + phase }}
+      cx={startX + (index % 4) * 16}
+      cy={126 + Math.floor(index / 4) * 28}
+      r="5"
+      fill={color}
+    />
+  ));
   return (
     <>
       <rect x="92" y="94" width="456" height="176" rx="22" fill="#ffffff" stroke="#a1a1a6" strokeWidth="3" />
-      <rect x="288" y="100" width="64" height="164" rx="14" fill="#cffafe" fillOpacity="0.7" stroke={accent} strokeWidth="3" strokeDasharray="6 5" />
-      {dotGroup(outside, 128, '#8b5cf6')}{dotGroup(inside, 380, accent)}
-      <path d="M244 174H278" stroke="#1d1d1f" strokeWidth="4" markerEnd={`url(#${arrowId})`} />
-      <path d="M396 204H362" stroke="#1d1d1f" strokeWidth="4" markerEnd={`url(#${arrowId})`} />
+      <rect className="membrane-fluid" x="288" y="100" width="64" height="164" rx="14" fill="#cffafe" fillOpacity="0.7" stroke={accent} strokeWidth="3" strokeDasharray="6 5" />
+      {dotGroup(outside, 128, '#8b5cf6', 0)}{dotGroup(inside, 380, accent, 7)}
+      <path className="solution-flow" d="M244 174H278" stroke="#1d1d1f" strokeWidth="4" markerEnd={`url(#${arrowId})`} />
+      <path className="solution-flow solution-flow-return" d="M396 204H362" stroke="#1d1d1f" strokeWidth="4" markerEnd={`url(#${arrowId})`} />
       <text x="190" y="292" fill="#6e6e73" fontSize="11" fontWeight="700" textAnchor="middle">WATER POTENTIAL</text>
       <text x="450" y="292" fill={accent} fontSize="11" fontWeight="700" textAnchor="middle">CELL PRESSURE</text>
       <text x="320" y="82" fill="#6e6e73" fontSize="10" fontWeight="700" textAnchor="middle">SELECTIVE MEMBRANE</text>
