@@ -602,15 +602,23 @@ const chemistry = [
     lab: 'bond',
     formula: 'n_1 v_1 = n_2 v_2',
     scenario: 'a fertiliser plant checking a batch formula before mixing',
-    crisis: 'The compound on the batch sheet is left carrying a charge. Three aluminium ions each carry a charge of 3, and the oxide ions each carry 2.',
+    crisis: 'The compound on the batch sheet is left carrying a charge. Four aluminium ions each carry a charge of 3, and the oxide ions each carry 2.',
     insight: 'A compound is electrically neutral overall. The total positive charge has to be matched exactly by the total negative charge.',
     resolution: 'At the solved oxide count the batch formula balances to zero net charge.',
     standardIds: ['cbse:9:3', 'icse:8:chemical-bonding'],
     model: {
+      // Four Al³⁺ (12+) against oxide at 2- each solves to 6 ions: Al₄O₆, two
+      // formula units of Al₂O₃, which is what a batch sheet would carry.
+      //
+      // Three Al³⁺ was the original and demands 4.5 oxide ions — a compound that
+      // cannot exist. Two Al³⁺ fixes the chemistry but solves to 3, and 3 is the
+      // aluminium charge printed in the crisis, so the answer could be read
+      // straight off the page. Four is the smallest count that is both whole and
+      // absent from the prose.
       kind: 'proportional',
-      params: { k: 2, targetY: 9, leftName: 'Negative charge', rightName: 'Positive charge', productUnit: 'units' },
-      control: { label: 'Oxide ions', unit: 'ions', min: 0, max: 10, precision: 1 },
-      tolerance: 0.9,
+      params: { k: 2, targetY: 12, leftName: 'Negative charge', rightName: 'Positive charge', productUnit: 'units' },
+      control: { label: 'Oxide ions', unit: 'ions', min: 0, max: 10, precision: 0 },
+      tolerance: 0.5,
       start: 92,
     },
   },
@@ -718,9 +726,12 @@ const chemistry = [
     standardIds: ['cbse:4:5', 'uk:KS2:materials'],
     model: {
       kind: 'proportional',
-      params: { k: 0.4, targetY: 1000, leftName: 'Recipe strength', rightName: 'Required strength', productUnit: 'g' },
-      control: { label: 'Sugar added', unit: 'g', min: 0, max: 5000, precision: 0 },
-      tolerance: 95,
+      // The pan holds 2.5 L, so grams of sugar divided by 2.5 is the strength in
+      // g/L; k is that 1/2.5. Both sides are concentrations, and the recipe's
+      // 400 g/L is what the learner has to reach — 1000 g of sugar.
+      params: { k: 0.4, targetY: 400, leftName: 'Strength in the pan', rightName: 'Recipe strength', productUnit: 'g/L' },
+      control: { label: 'Sugar added', unit: 'g', min: 0, max: 2000, precision: 0 },
+      tolerance: 10,
       start: 92,
     },
   },

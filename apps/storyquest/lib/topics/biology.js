@@ -452,14 +452,14 @@ const biology = [
     lab: 'ecosystem',
     formula: 'resilience = diversity + recovery',
     scenario: 'a burnt hillside being replanted after a wildfire season',
-    crisis: 'Young trees are competing themselves to death. The slope supports 68 units of established growth, and the replanting density is wrong.',
+    crisis: 'Young trees are competing themselves to death. The slope supports 68 units of established growth, and every sapling that takes matures into 4 of them.',
     insight: 'Recovery is not about planting the most. It is about planting what the damaged system can currently support.',
-    resolution: 'At the solved density the replanting matches what the slope can carry and the canopy re-establishes.',
+    resolution: 'At the solved number of saplings the replanting matches what the slope can carry and the canopy re-establishes.',
     model: {
       kind: 'carryingCapacity',
-      params: { capacity: 68, leftName: 'Replanting density', rightName: 'Slope capacity', productUnit: 'units' },
-      control: { label: 'Replanting density', unit: 'units', min: 0, max: 145, precision: 1 },
-      tolerance: 3.6,
+      params: { capacity: 68, perUnit: 4, leftName: 'Growth at maturity', rightName: 'Slope capacity', productUnit: 'units' },
+      control: { label: 'Saplings planted', unit: 'saplings', min: 0, max: 40, precision: 0 },
+      tolerance: 2,
       start: 92,
     },
   },
@@ -564,7 +564,10 @@ const biology = [
     standardIds: ['cbse:9:6', 'igcse:2.1'],
     model: {
       kind: 'proportional',
-      params: { k: 4, targetY: 6, leftName: 'Ratio × edge', rightName: 'Six', productUnit: '' },
+      // SA/V = 6/l rearranges to (SA/V)·l = 6, so both readouts are real
+      // quantities: the required ratio scaled by the edge, against the constant
+      // 6 that every cube carries.
+      params: { k: 4, targetY: 6, leftName: 'Required ratio × edge', rightName: 'Cube constant', productUnit: '' },
       control: { label: 'Cube edge', unit: 'cm', min: 0, max: 4, precision: 2 },
       tolerance: 0.55,
       start: 92,
@@ -784,9 +787,12 @@ const biology = [
     standardIds: ['cbse:8:2', 'igcse:10.2'],
     model: {
       kind: 'proportional',
-      params: { k: 1, targetY: 42750, leftName: 'Children covered', rightName: 'Threshold coverage', productUnit: 'children' },
+      // Both readouts are coverage fractions, so nothing on the panel equals the
+      // answer. k is 1/45 000, turning doses into the fraction of the district
+      // covered; the learner has to take 19/20 of 45 000 themselves.
+      params: { k: 1 / 45000, targetY: 0.95, leftName: 'Coverage achieved', rightName: 'Threshold', productUnit: '' },
       control: { label: 'Doses delivered', unit: 'doses', min: 0, max: 45000, precision: 0 },
-      tolerance: 4000,
+      tolerance: 0.02,
       start: 8,
     },
   },

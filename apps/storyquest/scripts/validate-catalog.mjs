@@ -27,7 +27,28 @@
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { compilePredicate } from '../lib/predicate-compile.js';
-import { createModel } from '../lib/models.js';
+import { createModel, MODEL_KINDS } from '../lib/models.js';
+
+/**
+ * The answer before display rounding.
+ *
+ * `createModel` rounds `solvedValue` to the control's precision, which is the
+ * right thing for the panel and the wrong thing for any check asking whether an
+ * answer is a whole number: a mission solving to 4.5 with `precision: 0` reports
+ * 5 and looks clean. Both integer checks below need the raw value.
+ */
+const exactSolvedValue = (model) => MODEL_KINDS[model.kind]?.solve(model.params);
+
+/**
+ * Whole number, allowing for floating-point noise.
+ *
+ * `vaccination-coverage` divides 0.95 by 1/45 000 and lands on
+ * 42749.99999999999. That is 42 750 in every sense a learner cares about, and
+ * rejecting it would be the check reporting on IEEE 754 rather than on the
+ * catalogue. The epsilon is far tighter than any real defect: the case this
+ * guards against, 4.5 ions, sits half a unit away.
+ */
+const isWholeNumber = (value) => Number.isFinite(value) && Math.abs(value - Math.round(value)) < 1e-6;
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const load = async (rel) => (await import(path.join(ROOT, rel))).default ?? (await import(path.join(ROOT, rel)));
@@ -270,6 +291,60 @@ function validateLegacyBalance(topic, fail) {
   checkSolvable(topic, fail);
   checkNoAnswerLeak(topic, fail);
   checkGradeFit(topic, fail);
+  checkDiscreteCount(topic, fail);
+}
+
+/**
+ * Units that count indivisible things.
+ *
+ * Every one of these is a unit already in use in the catalogue, taken from the
+ * control definitions rather than imagined, so the list starts grounded. A new
+ * countable unit has to be added here by hand — that is the cost of the check,
+ * and it is cheap next to shipping an impossible answer.
+ *
+ * Left out on purpose: `units`, `groups`, `pieces`, `rounds`, `batches` and
+ * `marks`. They read countable but the catalogue uses them for continuous
+ * abstractions — "68 units of established growth" is a quantity of biomass,
+ * not a tally — and forcing those to integers would reject good missions.
+ */
+const COUNTABLE_UNITS = new Set([
+  'atoms', 'bases', 'blocks', 'boats', 'books', 'breaths/min', 'buns', 'chairs',
+  'children', 'coins', 'contacts', 'cuttings', 'doses', 'e⁻', 'ions', 'items',
+  'marbles', 'motors', 'objects', 'pairs', 'patches', 'ropes', 'rotis', 'runs',
+  'sacks', 'saplings', 'scoops', 'seeds', 'teeth', 'trays', 'turns', 'votes',
+]);
+
+/**
+ * Does a mission that counts things solve to a whole number of them?
+ *
+ * `valency-count` put three aluminium ions at 3+ each against oxide at 2- and
+ * asked the learner to balance the charge. The algebra is clean and every other
+ * gate passed it, but the answer is 4.5 oxide ions — a compound that cannot
+ * exist. A learner who knows the chemistry would have been marked wrong for
+ * refusing to accept it.
+ *
+ * The check is only as good as COUNTABLE_UNITS above; a mission that counts
+ * something in a unit not on that list still slips through. It catches the case
+ * that matters most, where the impossibility is invisible in the prose and
+ * shows up only when the model is solved.
+ */
+function checkDiscreteCount(topic, fail) {
+  if (!COUNTABLE_UNITS.has(topic.model?.control?.unit)) return;
+
+  let model;
+  try {
+    model = createModel(topic.model);
+  } catch {
+    return; // checkSolvable already reported this.
+  }
+
+  const solved = exactSolvedValue(model);
+  if (!isWholeNumber(solved)) {
+    fail(
+      `mission counts in ${topic.model.control.unit} but solves to ${solved} of them — `
+      + 'choose parameters whose answer is a whole number, or change the control to a divisible quantity',
+    );
+  }
 }
 
 /**
@@ -302,9 +377,10 @@ function checkGradeFit(topic, fail) {
     return; // checkSolvable already reported this.
   }
 
-  if (!Number.isInteger(model.solvedValue)) {
+  const solved = exactSolvedValue(model);
+  if (!isWholeNumber(solved)) {
     fail(
-      `class ${topic.gradeLevel} mission solves to ${model.solvedValue}, but decimals are not taught `
+      `class ${topic.gradeLevel} mission solves to ${solved}, but decimals are not taught `
       + 'until class 4 — either regrade it or choose parameters with a whole-number answer',
     );
   }
