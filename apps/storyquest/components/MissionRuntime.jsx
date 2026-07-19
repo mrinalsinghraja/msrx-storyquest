@@ -1,14 +1,38 @@
 'use client';
 
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import CompletionCard from './CompletionCard';
+import ConstructRuntime from './ConstructRuntime';
+import ExploreRuntime from './ExploreRuntime';
 import InteractiveGraphFrame from './InteractiveGraphFrame';
 import StoryQuestShell from './StoryQuestShell';
 import { createMissionStory } from '../lib/curriculum';
+import { recordCompletion } from '../lib/progress';
 import { useStoryEngine } from '../lib/story-engine';
 
+/**
+ * Orchestrator.
+ *
+ * Dispatches on `interactionKind` before any canvas is mounted, because the
+ * three archetypes do not share a control surface — a construct simulator has
+ * no slider to configure and an explore simulator has no solved value.
+ *
+ * A mission with no `interactionKind` is a legacy balance record, which is all
+ * 100 of them today. That branch is the original component, untouched.
+ */
 export default function MissionRuntime({ mission }) {
+  switch (mission.interactionKind) {
+    case 'construct':
+      return <ConstructRuntime mission={mission} />;
+    case 'explore':
+      return <ExploreRuntime mission={mission} />;
+    default:
+      return <BalanceRuntime mission={mission} />;
+  }
+}
+
+function BalanceRuntime({ mission }) {
   const router = useRouter();
   const authored = useMemo(() => createMissionStory(mission), [mission]);
   const [story, setStory] = useState(authored);
@@ -16,6 +40,18 @@ export default function MissionRuntime({ mission }) {
 
   const engine = useStoryEngine(story);
   const pathTitles = engine.visitedPath.map((stepId) => story.steps[stepId]?.title ?? stepId);
+
+  /**
+   * Registers the completion, once, when the story reaches its ending.
+   *
+   * An effect here rather than a render-time call: `isComplete` is owned by
+   * `useStoryEngine`, so this component cannot observe the transition into it
+   * any earlier without duplicating that state.
+   */
+  const completed = engine.isComplete && Boolean(engine.ending);
+  useEffect(() => {
+    if (completed) recordCompletion(mission.id, { kind: 'balance' });
+  }, [completed, mission.id]);
 
   /**
    * Asks the server for a freshly written telling of the same mission. The
@@ -61,7 +97,7 @@ export default function MissionRuntime({ mission }) {
       conceptLabel={`${mission.subjectLabel} · ${mission.difficulty}`}
       missionNumber={String(mission.number).padStart(3, '0')}
       formula={mission.formula}
-      onExit={() => router.push('/missions')}
+      onExit={() => router.push('/learn')}
     >
       {engine.isComplete && engine.ending ? (
         <CompletionCard
@@ -73,7 +109,7 @@ export default function MissionRuntime({ mission }) {
           retelling={retelling}
           onRetell={retell}
           onReplay={engine.restart}
-          onTryAnother={() => router.push('/missions')}
+          onTryAnother={() => router.push('/learn')}
         />
       ) : null}
     </StoryQuestShell>
