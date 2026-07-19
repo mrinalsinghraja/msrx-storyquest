@@ -73,9 +73,20 @@ export function advanceClock(clock, rawDt, interval, carry) {
  * Returns `{ clockRef, clock, isPlaying, play, pause, toggle, reset }`. Read
  * `clockRef.current` inside a frame callback; read `clock` when rendering.
  */
-export function useSimClock({ autoStart = true, sampleHz = 8, onFrame, onSample } = {}) {
+export function useSimClock({ autoStart = true, sampleHz = 8, renderHz = 0, speed = 1, onFrame, onSample } = {}) {
   const [isPlaying, setIsPlaying] = useState(autoStart);
   const [clock, setClock] = useState(() => ({ ...CLOCK_ZERO, isPlaying: autoStart }));
+
+  /**
+   * Speed lives in a ref, not the effect's dependency list.
+   *
+   * Changing it mid-run must not tear down the loop: a restart re-establishes
+   * the frame baseline, which drops a frame and shows up as a visible hitch at
+   * the exact moment the learner clicked 2×. Reading it per frame instead means
+   * the rate changes on the very next frame with no discontinuity in `t`.
+   */
+  const speedRef = useRef(speed);
+  useEffect(() => { speedRef.current = speed > 0 ? speed : 0; }, [speed]);
 
   /**
    * Two separate ideas, deliberately not collapsed into one flag.
@@ -112,9 +123,11 @@ export function useSimClock({ autoStart = true, sampleHz = 8, onFrame, onSample 
     if (!isRunning) return undefined;
 
     const interval = sampleHz > 0 ? 1 / sampleHz : 0;
+    const renderInterval = renderHz > 0 ? 1 / renderHz : 0;
     let raf = 0;
     let last = null;
     let accumulated = 0;
+    let rendered = 0;
 
     const step = (now) => {
       raf = requestAnimationFrame(step);
@@ -127,7 +140,10 @@ export function useSimClock({ autoStart = true, sampleHz = 8, onFrame, onSample 
         return;
       }
 
-      const advanced = advanceClock(clockRef.current, (now - last) / 1000, interval, accumulated);
+      // Speed scales elapsed time before the clamp, so 2× still cannot leap the
+      // simulation forward after a stall — it just reaches the ceiling sooner.
+      const elapsed = ((now - last) / 1000) * speedRef.current;
+      const advanced = advanceClock(clockRef.current, elapsed, interval, accumulated);
       last = now;
       accumulated = advanced.carry;
 
@@ -144,12 +160,32 @@ export function useSimClock({ autoStart = true, sampleHz = 8, onFrame, onSample 
       if (advanced.sample) {
         sampleRef.current?.(current);
         setClock({ t: current.t, frame: current.frame, dt: current.dt, isPlaying: true });
+        rendered = 0;
+        return;
+      }
+
+      /**
+       * The render tick, for consumers that draw the clock through React.
+       *
+       * The blanket "never re-render at 60 fps" rule in the header is about a
+       * page holding many live simulators. A mission route holds exactly one,
+       * and one small SVG re-rendering at `renderHz` is cheap — cheaper than the
+       * alternative of reaching into the DOM behind React's back for 49 separate
+       * scenes. Opt-in, and off by default so the sampling consumers are
+       * unaffected.
+       */
+      if (renderInterval > 0) {
+        rendered += current.dt;
+        if (rendered >= renderInterval) {
+          rendered = 0;
+          setClock({ t: current.t, frame: current.frame, dt: current.dt, isPlaying: true });
+        }
       }
     };
 
     raf = requestAnimationFrame(step);
     return () => cancelAnimationFrame(raf);
-  }, [isRunning, sampleHz]);
+  }, [isRunning, sampleHz, renderHz]);
 
   const play = useCallback(() => setIsPlaying(true), []);
   const pause = useCallback(() => setIsPlaying(false), []);

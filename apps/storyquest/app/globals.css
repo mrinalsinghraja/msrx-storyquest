@@ -1233,71 +1233,18 @@
 
 /* --- ambient scene motion ------------------------------------------------
  *
- * Phase 1 of the motion rollout: decorative only, and deliberately CSS-only.
+ * Removed, deliberately.
  *
- * These loops carry no measurement. The osmosis solutes drift because solutes
- * drift, not because the number under them changed — so nothing here is allowed
- * to touch React. Keyframes run on the compositor, which means a slider drag
- * repaints the scene without the animation resetting, jumping, or dropping a
- * frame, and no simulator pays a re-render for the effect.
+ * This was a CSS-only first pass: keyframes on the compositor driving the
+ * osmosis membrane and solutes. Cheaper than React, and it looked right.
  *
- * Transform and opacity only. `transform-box: fill-box` is required on SVG
- * children or the transform origin resolves against the whole viewBox and the
- * element swings across the scene instead of easing in place.
+ * It was also unpausable. Every apparatus now runs on the shared simulation
+ * clock with a transport, and a CSS animation cannot see that transport — so
+ * pressing pause stopped all forty-nine scenes and left this one drifting. A
+ * pause control that visibly fails on one scene is a worse defect than the
+ * per-frame cost of driving that scene from the clock like every other.
  *
- * Opt-in rather than opt-out: everything sits inside
- * `prefers-reduced-motion: no-preference`, so a reader who has asked for less
- * motion gets a completely static scene by default, not one we remembered to
- * switch off.
+ * The motion did not disappear; it moved into OsmosisLab in
+ * components/InteractiveGraphFrame.jsx, where `prefers-reduced-motion` is
+ * honoured by freezing the clock rather than by a media query here.
  */
-@media (prefers-reduced-motion: no-preference) {
-  .membrane-fluid,
-  .particle-drift,
-  .solution-flow {
-    transform-box: fill-box;
-    transform-origin: center;
-  }
-
-  /* The membrane breathes: a semi-permeable boundary under osmotic pressure is
-   * not a rigid wall. Scale is tiny on purpose — this should register as life
-   * in the scene, not as a pulsing rectangle. */
-  .membrane-fluid {
-    animation: membrane-breathe 5.5s ease-in-out infinite;
-  }
-
-  @keyframes membrane-breathe {
-    0%, 100% { transform: scaleX(1); opacity: 0.92; }
-    50% { transform: scaleX(1.045); opacity: 1; }
-  }
-
-  /* Solutes wander. `--drift-i` is set per circle in OsmosisLab so each one
-   * starts at a different point in the cycle; without the stagger the whole
-   * group moves as a sheet, which reads as a bug rather than as diffusion. */
-  .particle-drift {
-    animation: particle-drift 4.2s ease-in-out infinite;
-    animation-delay: calc(var(--drift-i, 0) * -0.37s);
-  }
-
-  @keyframes particle-drift {
-    0%, 100% { transform: translate(0, 0); }
-    25% { transform: translate(1.5px, -2px); }
-    50% { transform: translate(-1px, 1.5px); }
-    75% { transform: translate(-2px, -1px); }
-  }
-
-  /* The transfer arrows pulse along their own direction of travel, so the two
-   * arrows are offset against each other — water crossing one way while
-   * pressure pushes back is the whole point of the diagram. */
-  .solution-flow {
-    animation: solution-flow 3.4s ease-in-out infinite;
-  }
-
-  .solution-flow-return {
-    animation-delay: -1.7s;
-  }
-
-  @keyframes solution-flow {
-    0%, 100% { opacity: 0.35; transform: translateX(-2px); }
-    50% { opacity: 1; transform: translateX(2px); }
-  }
-}
