@@ -788,6 +788,25 @@
   text-transform: none;
 }
 
+/* Provisional-syllabus marker.
+ *
+ * The registry's board anchors are not yet checked against published
+ * specifications, so every label carrying one is flagged. Deliberately quiet —
+ * an asterisk and a muted line, not a warning banner — because the mapping is
+ * useful and probably right, just not citable. Delete this rule and its two
+ * call sites in ChapterIndex when the mapping is signed off. */
+.catalogue .chapter-board-preview {
+  color: var(--ink-3);
+  font-weight: 400;
+}
+
+.catalogue .tally-preview {
+  color: var(--ink-3);
+  letter-spacing: 0.08em;
+  text-transform: none;
+  font-style: italic;
+}
+
 .catalogue .masthead-glyph {
   display: inline-block;
   margin-right: var(--s3);

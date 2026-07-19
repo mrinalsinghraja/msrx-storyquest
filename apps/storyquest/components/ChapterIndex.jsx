@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { chapterLabelFor, coverageFor } from '../lib/registry';
+import { boardMeta, chapterLabelFor, coverageFor } from '../lib/registry';
 import { useBoard } from './BoardProvider';
 import BoardSelector from './BoardSelector';
 
@@ -26,6 +26,12 @@ export default function ChapterIndex({ discipline, chapters }) {
             {coverage && (
               <span className="data tally" aria-live="polite">
                 {coverage.mapped} of {coverage.total} chapters mapped
+                {/* The syllabus anchors in lib/registry.js have not been checked
+                  * against the boards' current published specifications. Until
+                  * they are, the label has to say so wherever it appears —
+                  * a learner reading "Class 9 · Ch 5" has no other way to know
+                  * it is provisional. Removed when the mapping is signed off. */}
+                <span className="tally-preview"> · mapping in preview</span>
               </span>
             )}
           </div>
@@ -47,7 +53,14 @@ export default function ChapterIndex({ discipline, chapters }) {
                     {/* The syllabus line sits under the canonical title rather
                       * than replacing it: a reader should still be able to tell
                       * two boards are looking at the same chapter. */}
-                    {boardLabel && <span className="data chapter-board">{boardLabel}</span>}
+                    {boardLabel && (
+                      <span className="data chapter-board">
+                        {boardLabel}
+                        <span className="chapter-board-preview" title="Not yet checked against the board's published specification.">
+                          {' '}*
+                        </span>
+                      </span>
+                    )}
                     <p className="caption">{chapter.blurb}</p>
                   </span>
 
@@ -62,10 +75,18 @@ export default function ChapterIndex({ discipline, chapters }) {
 
         {/* A gap is a real answer about a syllabus, so it is stated rather than
           * quietly rendered as an unlabelled row. */}
-        {coverage?.missing.length > 0 && (
+        {coverage && (
           <p className="coverage-note caption">
-            {coverage.missing.length} {coverage.missing.length === 1 ? 'chapter sits' : 'chapters sit'} outside
-            this syllabus at this age range, and {coverage.missing.length === 1 ? 'is' : 'are'} shown under our own name.
+            <span className="chapter-board-preview">*</span> Syllabus mapping is in preview. These chapter
+            references have not yet been checked against {boardMeta(board).label}&rsquo;s published
+            specification, so treat them as a guide rather than a citation.
+            {coverage.missing.length > 0 && (
+              <>
+                {' '}
+                {coverage.missing.length} {coverage.missing.length === 1 ? 'chapter sits' : 'chapters sit'} outside
+                this syllabus at this age range, and {coverage.missing.length === 1 ? 'is' : 'are'} shown under our own name.
+              </>
+            )}
           </p>
         )}
       </div>
