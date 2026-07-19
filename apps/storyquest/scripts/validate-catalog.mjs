@@ -308,10 +308,12 @@ function validateLegacyBalance(topic, fail) {
  * not a tally — and forcing those to integers would reject good missions.
  */
 const COUNTABLE_UNITS = new Set([
-  'atoms', 'bases', 'blocks', 'boats', 'books', 'breaths/min', 'buns', 'chairs',
-  'children', 'coins', 'contacts', 'cuttings', 'doses', 'e⁻', 'ions', 'items',
-  'marbles', 'motors', 'objects', 'pairs', 'patches', 'ropes', 'rotis', 'runs',
-  'sacks', 'saplings', 'scoops', 'seeds', 'teeth', 'trays', 'turns', 'votes',
+  'animals', 'atoms', 'bases', 'blocks', 'boats', 'books', 'breaths/min', 'buns',
+  'chairs', 'children', 'coins', 'contacts', 'cubes', 'cuttings', 'doses', 'e⁻',
+  'ions', 'items', 'jars', 'magnets', 'marbles', 'motors', 'objects', 'pairs',
+  'patches', 'ropes', 'rotis', 'runs', 'sacks', 'saplings', 'scoops', 'seeds',
+  'shapes', 'spans', 'spoons', 'stems', 'tablets', 'teeth', 'trays', 'turns',
+  'votes',
 ]);
 
 /**
