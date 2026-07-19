@@ -575,7 +575,7 @@ const biology = [
     chapterId: 'biology.human-body',
     difficulty: 'Foundation',
     gradeGroup: 'early',
-    gradeLevel: 3,
+    gradeLevel: 5,
     title: 'Counting a pulse',
     lab: 'heart',
     formula: '\\text{beats} = \\text{rate} \\times \\text{time}',

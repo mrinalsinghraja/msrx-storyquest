@@ -529,9 +529,9 @@ const chemistry = [
   {
     slug: 'melting-ice',
     chapterId: 'chemistry.matter-particle',
-    difficulty: 'Foundation',
-    gradeGroup: 'early',
-    gradeLevel: 3,
+    difficulty: 'Explorer',
+    gradeGroup: 'high',
+    gradeLevel: 9,
     title: 'Solid, liquid, gas',
     lab: 'particle',
     formula: 'Q = mL_f',

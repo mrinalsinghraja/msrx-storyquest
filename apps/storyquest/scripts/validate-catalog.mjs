@@ -269,6 +269,45 @@ function validateLegacyBalance(topic, fail) {
 
   checkSolvable(topic, fail);
   checkNoAnswerLeak(topic, fail);
+  checkGradeFit(topic, fail);
+}
+
+/**
+ * Is the answer something a learner at this grade has been taught to produce?
+ *
+ * The catalogue promises classes 1 to 10, and `gradeLevel` is what routes a
+ * child to a mission. Four topics were labelled class 3 while asking for
+ * secondary-school work: buoyancy with an answer of 0.000499 m³, latent heat at
+ * 334 kJ/kg, moments, and a decimal division. A class-3 label on `F_b = ρgV` is
+ * not a stylistic problem — it sends an eight-year-old to a wall.
+ *
+ * Decimals are the one line that can be drawn mechanically. They are not taught
+ * before class 4, so a sub-class-4 mission whose answer is fractional is wrong
+ * regardless of how the prose reads. Deliberately the only numeric rule here:
+ * magnitude is not a proxy for difficulty — `place-value-carry` answers 150 and
+ * is a perfectly good class-3 mission, because place value is exactly what it
+ * is teaching.
+ *
+ * This cannot catch everything. `melting-ice` answered a whole 3 kg and passed
+ * every mechanical test while still needing the latent heat of fusion; it was
+ * regraded by reading it. Treat a pass here as "not obviously mis-graded".
+ */
+function checkGradeFit(topic, fail) {
+  if (!Number.isInteger(topic.gradeLevel) || topic.gradeLevel > 3) return;
+
+  let model;
+  try {
+    model = createModel(topic.model);
+  } catch {
+    return; // checkSolvable already reported this.
+  }
+
+  if (!Number.isInteger(model.solvedValue)) {
+    fail(
+      `class ${topic.gradeLevel} mission solves to ${model.solvedValue}, but decimals are not taught `
+      + 'until class 4 — either regrade it or choose parameters with a whole-number answer',
+    );
+  }
 }
 
 /**
