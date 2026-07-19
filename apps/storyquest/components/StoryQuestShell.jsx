@@ -36,6 +36,8 @@ export default function StoryQuestShell({
   missionNumber,
   formula,
   mission,
+  /** True once both sides of the relationship agree; lights the casing. */
+  solved = false,
   onExit,
   children,
 }) {
@@ -53,7 +55,10 @@ export default function StoryQuestShell({
   const parent = trail[trail.length - 1];
 
   return (
-    <div className="flex h-[100dvh] flex-col overflow-hidden bg-white text-[var(--text-primary)]">
+    <div
+      className="mission flex h-[100dvh] flex-col overflow-hidden text-[var(--text-primary)]"
+      data-world={mission?.subject}
+    >
       <header className="nav-blur flex shrink-0 items-center justify-between gap-3 border-b border-[var(--border)] px-4 py-2.5 sm:px-6">
         <div className="flex min-w-0 items-center gap-2.5">
           {parent ? (
@@ -128,23 +133,39 @@ export default function StoryQuestShell({
         style={{ WebkitOverflowScrolling: 'touch' }}
       >
         <div className="mx-auto max-w-3xl">
-          {formula ? (
-            <div className="mb-4 flex flex-wrap items-center justify-between gap-2 rounded-2xl border border-[var(--border)] bg-[var(--surface)] px-4 py-3">
-              <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--text-tertiary)]">
-                Live relationship
-              </span>
-              <span className="text-[var(--text-primary)]"><MathFormula expression={formula} /></span>
+          {/* Apparatus and equation in one casing.
+            *
+            * They were two stacked cards — a grey equation bar, then a
+            * separately-ringed lab — which read as two unrelated widgets that
+            * happened to be adjacent. The equation is the rule this machine
+            * obeys, so it belongs on the machine. */}
+          {visual ? (
+            <div className="console" data-world={mission?.subject} data-state={solved ? 'success' : undefined}>
+              <div className="console-rail">
+                <span className="console-lamp" aria-hidden="true" />
+                <span className="console-name">{mission?.title ?? conceptLabel}</span>
+                <span className="console-live">Running</span>
+              </div>
+
+              <div className="console-screen">{visual}</div>
+
+              {formula ? (
+                <div className="console-formula">
+                  <span className="label">What has to balance</span>
+                  <MathFormula expression={formula} />
+                </div>
+              ) : null}
             </div>
           ) : null}
-
-          {visual ? <div className="premium-ring rounded-2xl">{visual}</div> : null}
 
           {/* The heading only earns its place when there is a feed under it.
             * Construct and explore state their brief on the apparatus itself and
             * pass no paragraphs, which left the label stranded over blank space. */}
           {paragraphs?.length ? (
             <article className="space-y-4 py-6 text-[15px] leading-7 text-[var(--text-secondary)] sm:text-base sm:leading-8">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--accent-cyan)]">Narrative feed</p>
+              {/* "Narrative feed" named the subsystem, not the content. This
+                * says what the paragraphs under it actually are. */}
+              <p className="step-label">What is happening</p>
               {paragraphs.map((paragraph, index) => (
                 <p key={`${index}-${paragraph.slice(0, 28)}`}>{paragraph}</p>
               ))}
@@ -156,11 +177,12 @@ export default function StoryQuestShell({
       </main>
 
       {choices?.length ? (
-        <footer className="shrink-0 border-t border-[var(--border)] bg-white px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:px-6">
+        <footer className="shrink-0 border-t border-[var(--border)] bg-[var(--paper-warm)] px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:px-6">
           <div className="mx-auto max-w-3xl">
-            <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--text-tertiary)]">
-              Decision relay
-            </p>
+            {/* Asks the question the buttons answer. "Decision relay" described
+              * the mechanism routing the choice, which is not the learner's
+              * problem. */}
+            <p className="step-label mb-2">What do you do?</p>
             <ChoiceBar choices={choices} onChoose={onChoose} />
           </div>
         </footer>

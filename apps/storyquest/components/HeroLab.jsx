@@ -33,7 +33,7 @@ export default function HeroLab({ mission }) {
   const reading = model.evaluate(percent);
 
   return (
-    <figure className="console" data-world={mission.subject}>
+    <figure className="console" data-world={mission.subject} data-state={reading.balanced ? 'success' : undefined}>
       <div className="console-rail">
         <span className="console-lamp" aria-hidden="true" />
         <span className="console-name">{mission.title}</span>
@@ -48,6 +48,7 @@ export default function HeroLab({ mission }) {
           status="neutral"
           onChange={setPercent}
           labKind={mission.lab}
+          world={mission.subject}
         />
       </div>
 

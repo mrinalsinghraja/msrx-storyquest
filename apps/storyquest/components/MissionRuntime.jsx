@@ -84,6 +84,7 @@ function BalanceRuntime({ mission }) {
       status={engine.status}
       onChange={engine.setPercent}
       labKind={engine.step.visual.lab}
+      world={mission.subject}
     />
   );
 
@@ -94,6 +95,7 @@ function BalanceRuntime({ mission }) {
       choices={engine.isComplete ? [] : engine.step.choices}
       onChoose={engine.choose}
       progress={engine.progress}
+      solved={engine.status === 'success' || Boolean(engine.reading?.balanced)}
       conceptLabel={`${mission.subjectLabel} · ${mission.difficulty}`}
       missionNumber={String(mission.number).padStart(3, '0')}
       mission={mission}

@@ -72,6 +72,15 @@
   --world-mathematics-ink: oklch(0.52 0.115 75);
   --world-biology-ink: oklch(0.48 0.115 155);
 
+  /* Default world, so anything that never declares one still has a pigment.
+   *
+   * These belong at the root rather than on `.bench` and `.mission`. Both hosts
+   * used to declare their own fallback, and because a class and an attribute
+   * selector carry equal specificity, `.mission`'s physics default won on source
+   * order and painted the labels on a biology mission blue. */
+  --pigment: var(--world-physics);
+  --pigment-ink: var(--world-physics-ink);
+
   --lift: 160ms cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
@@ -178,8 +187,6 @@
  * ======================================================================== */
 
 .bench {
-  --pigment: var(--world-physics);
-  --pigment-ink: var(--world-physics-ink);
 
   /* Rebound per host rather than at :root. The catalogue block owns its own
    * binding of the same name, so each area declares the face it wants and
@@ -191,32 +198,33 @@
   font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
 }
 
-/* Both the self and descendant forms.
+/* World pigment, declared once for the whole site.
  *
- * `<main>` carries the hero's world, and each world card carries its own below
- * it. A self-only selector leaves all four cards inheriting the hero's pigment;
- * a descendant-only selector never matches the `<main>`. The catalogue block
- * below hit exactly this and the note there says so. */
-.bench[data-world="physics"],
-.bench [data-world="physics"] {
+ * Unscoped on purpose: `data-world` now appears on the home page's `<main>`,
+ * on each world card, and on the mission shell, and three copies of the same
+ * four-way mapping would drift. Any element that knows its world sets the
+ * attribute and everything beneath it inherits the right colour.
+ *
+ * The catalogue's own mapping still wins where it applies — `.catalogue
+ * [data-world="physics"]` outranks a bare attribute selector — which is what
+ * lets the library keep its printing-ink treatment.
+ */
+[data-world="physics"] {
   --pigment: var(--world-physics);
   --pigment-ink: var(--world-physics-ink);
 }
 
-.bench[data-world="chemistry"],
-.bench [data-world="chemistry"] {
+[data-world="chemistry"] {
   --pigment: var(--world-chemistry);
   --pigment-ink: var(--world-chemistry-ink);
 }
 
-.bench[data-world="mathematics"],
-.bench [data-world="mathematics"] {
+[data-world="mathematics"] {
   --pigment: var(--world-mathematics);
   --pigment-ink: var(--world-mathematics-ink);
 }
 
-.bench[data-world="biology"],
-.bench [data-world="biology"] {
+[data-world="biology"] {
   --pigment: var(--world-biology);
   --pigment-ink: var(--world-biology-ink);
 }
@@ -272,7 +280,7 @@
 /* Dark casing, lit screen — the way an actual instrument is built. Deliberately
  * a bezel around the existing light lab rather than a dark restyle of it: the 49
  * scene renderers keep their palette and none of them had to change. */
-.bench .console {
+.console {
   position: relative;
   border-radius: 1.5rem;
   background: var(--console);
@@ -280,9 +288,29 @@
   box-shadow:
     0 1px 0 oklch(1 0 0 / 0.08) inset,
     0 30px 60px -22px oklch(0.19 0.021 265 / 0.55);
+  transition: box-shadow 320ms cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
-.bench .console-rail {
+/* Solved.
+ *
+ * The casing lights in the world's colour the moment both sides agree. This is
+ * the reward, and it is on the chrome rather than in the scene on purpose: the
+ * scene's geometry is derived from the slider, which is the answer being
+ * graded, so nothing in here may repaint or move it. A ring around the machine
+ * changes nothing the learner is reading and is visible from across a room. */
+.console[data-state="success"] {
+  box-shadow:
+    0 1px 0 oklch(1 0 0 / 0.08) inset,
+    0 0 0 2px color-mix(in oklch, var(--pigment) 55%, transparent),
+    0 0 34px -4px color-mix(in oklch, var(--pigment) 45%, transparent),
+    0 30px 60px -22px oklch(0.19 0.021 265 / 0.55);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .console { transition: none; }
+}
+
+.console-rail {
   display: flex;
   align-items: center;
   gap: 0.6rem;
@@ -294,7 +322,7 @@
   color: var(--console-ink-2);
 }
 
-.bench .console-lamp {
+.console-lamp {
   width: 0.5rem;
   height: 0.5rem;
   border-radius: 50%;
@@ -302,12 +330,12 @@
   box-shadow: 0 0 0 3px color-mix(in oklch, var(--pigment) 26%, transparent);
 }
 
-.bench .console-name {
+.console-name {
   color: var(--console-ink);
   font-weight: 600;
 }
 
-.bench .console-live {
+.console-live {
   margin-left: auto;
   display: inline-flex;
   align-items: center;
@@ -316,7 +344,7 @@
 
 /* The one ambient animation on the page. It marks the console as running, which
  * is true — the sim clock really is advancing behind it. */
-.bench .console-live::before {
+.console-live::before {
   content: "";
   width: 0.4rem;
   height: 0.4rem;
@@ -330,13 +358,13 @@
   50% { opacity: 1; }
 }
 
-.bench .console-screen {
+.console-screen {
   border-radius: 1rem;
   overflow: hidden;
   background: #ffffff;
 }
 
-.bench .console-caption {
+.console-caption {
   margin: 0;
   padding: 0.8rem 0.7rem 0.2rem;
   font-size: 0.85rem;
@@ -344,9 +372,62 @@
   color: var(--console-ink-2);
 }
 
-.bench .console-caption b {
+.console-caption b {
   color: var(--console-ink);
   font-weight: 600;
+}
+
+/* The equation, set into the casing under the screen.
+ *
+ * It used to sit in a grey card above the apparatus, captioned "Live
+ * relationship" — floating free of the machine it describes. Inside the console
+ * it reads as what it is: the rule this instrument obeys, engraved on the
+ * instrument. KaTeX inherits `color`, so the whole expression picks up the
+ * console ink without touching the math renderer. */
+.console-formula {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding: 0.85rem 0.9rem 0.35rem;
+  color: var(--console-ink);
+  border-top: 1px solid var(--console-rule);
+  margin-top: 0.7rem;
+}
+
+.console-formula .label {
+  font-family: var(--font-data), ui-monospace, monospace;
+  font-size: 0.66rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--console-ink-2);
+}
+
+/* ===========================================================================
+ * The mission screen.
+ *
+ * Same workbench language as the home page, on the surface a learner actually
+ * spends their time in. Tokens only — the shell itself is Tailwind, so this
+ * block deliberately styles nothing structural.
+ * ======================================================================== */
+
+.mission {
+  background: var(--paper-warm);
+}
+
+/* Section labels on the mission screen.
+ *
+ * Named for what the learner is doing, not for the subsystem producing it:
+ * "Narrative feed" and "Decision relay" are the names an engineer gives a
+ * component, and a twelve-year-old reads them as noise. */
+.mission .step-label {
+  font-family: var(--font-data), ui-monospace, monospace;
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--pigment-ink);
 }
 
 /* --- Controls ----------------------------------------------------------- */
@@ -454,7 +535,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .bench .console-live::before { animation: none; opacity: 0.9; }
+  .console-live::before { animation: none; opacity: 0.9; }
   .bench .btn,
   .bench .world { transition: none; }
   .bench .btn:hover,
