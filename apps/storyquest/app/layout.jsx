@@ -1,9 +1,35 @@
-import { Inter, Instrument_Serif, JetBrains_Mono, Newsreader } from 'next/font/google';
+import { Bricolage_Grotesque, IBM_Plex_Sans, Inter, Instrument_Serif, JetBrains_Mono, Newsreader } from 'next/font/google';
 import './globals.css';
 import { SITE_ORIGIN, canonical } from '../lib/site';
 import { CATALOGUE, gradeRange } from '../lib/catalogue-stats';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
+
+/**
+ * Workbench faces, used by `.bench` in globals.css.
+ *
+ * Bricolage Grotesque is the display voice: a variable grotesque that reads as
+ * engineered without reading as corporate, which is the line this site has to
+ * walk for an audience that spans a six-year-old and a sixteen-year-old. It is
+ * held to headings only.
+ *
+ * IBM Plex Sans carries body copy for a reason that is not aesthetic: this is
+ * used by students worldwide, and Plex has the script coverage to render their
+ * names and languages. A face chosen only for its Latin shapes would fail that
+ * quietly.
+ */
+const bricolage = Bricolage_Grotesque({
+  subsets: ['latin'],
+  variable: '--font-headline',
+  display: 'swap',
+});
+
+const plexSans = IBM_Plex_Sans({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  variable: '--font-body',
+  display: 'swap',
+});
 
 /**
  * Catalogue faces, used only by the mission library (`.catalogue` in globals.css).
@@ -118,7 +144,7 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${instrumentSerif.variable} ${newsreader.variable} ${jetbrainsMono.variable} h-full antialiased`}
+      className={`${inter.variable} ${bricolage.variable} ${plexSans.variable} ${instrumentSerif.variable} ${newsreader.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col font-sans">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
