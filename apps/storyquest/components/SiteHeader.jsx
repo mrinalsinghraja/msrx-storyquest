@@ -6,7 +6,7 @@ import { useState } from 'react';
 import MSRXLogo from './MSRXLogo';
 
 const links = [
-  { href: '/missions', label: 'Missions' },
+  { href: '/learn', label: 'Catalogue' },
   { href: '/faq', label: 'FAQ' },
   { href: '/privacy', label: 'Privacy' },
 ];
@@ -35,7 +35,7 @@ export default function SiteHeader() {
 
         <nav aria-label="Primary navigation" className="hidden items-center gap-6 md:flex">
           {links.map((item) => {
-            const active = pathname === item.href || (item.href === '/missions' && pathname.startsWith('/missions/'));
+            const active = pathname === item.href || (item.href === '/learn' && pathname.startsWith('/learn/'));
             return (
               <Link
                 key={item.href}
@@ -55,7 +55,7 @@ export default function SiteHeader() {
             <span aria-hidden="true" className="text-[11px]">↗</span>
           </a>
           <Link
-            href="/missions"
+            href="/learn"
             className="focus-ring msrx-gradient inline-flex h-9 items-center rounded-full px-4 text-[13px] font-semibold text-white shadow-sm transition hover:opacity-90"
           >
             Start a mission
@@ -94,7 +94,7 @@ export default function SiteHeader() {
               MSRX Portal ↗
             </a>
             <Link
-              href="/missions"
+              href="/learn"
               onClick={() => setIsOpen(false)}
               className="focus-ring msrx-gradient mt-1 rounded-xl px-3 py-3 text-center text-sm font-semibold text-white"
             >

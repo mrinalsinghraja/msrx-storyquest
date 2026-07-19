@@ -1,8 +1,11 @@
-import MissionLobby from '../../components/MissionLobby';
-import { curriculum, subjectCatalog } from '../../lib/curriculum';
+import { permanentRedirect } from 'next/navigation';
+import { LEGACY_PATHS } from '../../lib/redirects';
 
-export const metadata = { title: 'Mission Library', description: 'Browse 100 interactive STEM missions across Physics, Chemistry, Mathematics, and Biology.' };
-
-export default function MissionsPage() {
-  return <MissionLobby curriculum={curriculum} subjects={subjectCatalog} />;
+/**
+ * The flat catalogue moved to `/learn` when the curriculum grew a three-tier
+ * tree. This URL is indexed and linked from the MSRX portal, so it redirects
+ * rather than 404s.
+ */
+export default function MissionsIndexRedirect() {
+  permanentRedirect(LEGACY_PATHS['/missions']);
 }

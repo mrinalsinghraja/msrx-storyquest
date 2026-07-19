@@ -10,7 +10,7 @@ export default function NotFound() {
         <h1 className="mt-2 text-xl font-semibold text-[var(--text-primary)]">This story path does not exist.</h1>
         <p className="mt-2 text-sm leading-6 text-[var(--text-secondary)]">The mission you were looking for is not in the library.</p>
         <Link
-          href="/missions"
+          href="/learn"
           className="focus-ring msrx-gradient mt-6 inline-flex min-h-[52px] items-center rounded-full px-5 text-sm font-semibold text-white transition hover:opacity-90"
         >
           Browse the mission library

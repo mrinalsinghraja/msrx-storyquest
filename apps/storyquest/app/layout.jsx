@@ -1,8 +1,36 @@
-import { Inter } from 'next/font/google';
+import { Inter, Instrument_Serif, JetBrains_Mono, Newsreader } from 'next/font/google';
 import './globals.css';
 import { SITE_ORIGIN, canonical } from '../lib/site';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
+
+/**
+ * Catalogue faces, used only by the mission library (`.catalogue` in globals.css).
+ *
+ * The rest of the site stays on Inter and the portal tokens. Loading them here
+ * rather than in the route keeps a single font pipeline, and `display: swap`
+ * plus the fallback stacks mean a slow font never blanks the page.
+ */
+const instrumentSerif = Instrument_Serif({
+  subsets: ['latin'],
+  weight: '400',
+  style: ['normal', 'italic'],
+  variable: '--font-display',
+  display: 'swap',
+});
+
+const newsreader = Newsreader({
+  subsets: ['latin'],
+  style: ['normal', 'italic'],
+  variable: '--font-text',
+  display: 'swap',
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--font-data',
+  display: 'swap',
+});
 
 export const metadata = {
   metadataBase: new URL(SITE_ORIGIN),
@@ -87,7 +115,10 @@ const jsonLd = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${inter.variable} h-full antialiased`}>
+    <html
+      lang="en"
+      className={`${inter.variable} ${instrumentSerif.variable} ${newsreader.variable} ${jetbrainsMono.variable} h-full antialiased`}
+    >
       <body className="flex min-h-full flex-col font-sans">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
         {children}

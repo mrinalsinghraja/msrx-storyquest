@@ -87,7 +87,7 @@ export default function HomePage() {
               </p>
 
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <Link href="/missions" className="focus-ring msrx-gradient inline-flex min-h-13 items-center justify-center rounded-full px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:opacity-90">
+                <Link href="/learn" className="focus-ring msrx-gradient inline-flex min-h-13 items-center justify-center rounded-full px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:opacity-90">
                   Explore the mission library
                   <span aria-hidden="true" className="ml-2">↗</span>
                 </Link>
@@ -130,14 +130,14 @@ export default function HomePage() {
                 <p className="text-[13px] font-semibold uppercase tracking-[0.14em] text-[var(--accent-purple)]">Four connected worlds</p>
                 <h2 className="mt-3 text-3xl font-bold tracking-tight text-[var(--text-primary)]">Find the system behind the story.</h2>
               </div>
-              <Link href="/missions" className="focus-ring rounded text-sm font-semibold text-[var(--accent-cyan)] hover:opacity-80">
+              <Link href="/learn" className="focus-ring rounded text-sm font-semibold text-[var(--accent-cyan)] hover:opacity-80">
                 Browse all 100 missions →
               </Link>
             </div>
 
             <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
               {subjects.map((subject) => (
-                <Link key={subject.label} href="/missions" className="card-hover focus-ring rounded-2xl border border-[var(--border)] bg-white p-5 shadow-[var(--shadow-card)]">
+                <Link key={subject.label} href="/learn" className="card-hover focus-ring rounded-2xl border border-[var(--border)] bg-white p-5 shadow-[var(--shadow-card)]">
                   <span className="grid h-11 w-11 place-items-center rounded-xl text-xl" style={{ background: subject.bg, color: subject.fg }}>
                     {subject.icon}
                   </span>
@@ -161,7 +161,7 @@ export default function HomePage() {
               <p className="mt-4 text-[16px] leading-7 text-[var(--text-secondary)]">
                 Choose a concept. Take control of the lab. Let the evidence decide your next move.
               </p>
-              <Link href="/missions" className="focus-ring msrx-gradient mt-7 inline-flex min-h-12 items-center rounded-full px-6 py-3 text-sm font-semibold text-white transition hover:opacity-90">
+              <Link href="/learn" className="focus-ring msrx-gradient mt-7 inline-flex min-h-12 items-center rounded-full px-6 py-3 text-sm font-semibold text-white transition hover:opacity-90">
                 Launch a mission →
               </Link>
             </div>

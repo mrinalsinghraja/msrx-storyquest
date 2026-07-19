@@ -108,3 +108,1064 @@
     @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00c4df] focus-visible:ring-offset-2 focus-visible:ring-offset-white;
   }
 }
+
+/* ===========================================================================
+ * Mission library — the plate catalogue.
+ *
+ * Everything below is scoped under `.catalogue` and owns no global selectors,
+ * so the rest of StoryQuest keeps the portal tokens and Inter. The reference is
+ * a scientific instrument maker's catalogue rather than a magazine: engraved
+ * plate numbers, ruled specimen fields, italic captions, wide margins.
+ *
+ * Plain classes throughout, no Tailwind utilities in the markup. Mixing the two
+ * on the same elements is how paddings end up cancelling each other out.
+ * ======================================================================== */
+
+/* Two token hosts, one palette.
+ *
+ * `.catalogue` is the library pages. `.apparatus` is the panel the construct and
+ * explore runtimes render into — those mount inside `StoryQuestShell`, which is
+ * the portal design system (Tailwind, Inter, `--text-primary`), so none of these
+ * tokens reach them by inheritance. Declaring both selectors here keeps one
+ * copy of the six pigments rather than a second set drifting out of step. */
+.catalogue,
+.apparatus {
+  /* Cool drawing-sheet stock, deliberately not the warm cream default. */
+  --paper: oklch(0.972 0.004 250);
+  --paper-deep: oklch(0.945 0.006 250);
+  --paper-raise: oklch(0.995 0.002 250);
+
+  --ink: oklch(0.205 0.014 265);
+  --ink-2: oklch(0.455 0.012 265);
+  --ink-3: oklch(0.635 0.01 265);
+
+  --rule: oklch(0.205 0.014 265 / 0.16);
+  --rule-soft: oklch(0.205 0.014 265 / 0.07);
+
+  /* World pigments. Chroma is held under 0.09 so each reads as a printing ink
+   * rather than a UI accent, while L stays dark enough for text on paper. */
+  --pig-physics: oklch(0.48 0.075 235);
+  --pig-chemistry: oklch(0.44 0.085 330);
+  --pig-mathematics: oklch(0.52 0.085 75);
+  --pig-biology: oklch(0.45 0.07 155);
+  --pigment: var(--ink);
+
+  /* 4px base. Named for the role each step plays in the page rhythm. */
+  --s1: 0.25rem;
+  --s2: 0.5rem;
+  --s3: 0.75rem;
+  --s4: 1.25rem;
+  --s5: 2rem;
+  --s6: 3rem;
+  --s7: 4.5rem;
+  --s8: 7rem;
+
+  --measure: 78rem;
+  --lift: 160ms cubic-bezier(0.22, 0.61, 0.36, 1);
+
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-text), Georgia, "Times New Roman", serif;
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+/* Both the self and descendant forms.
+ *
+ * A plate carries `data-world` below `.catalogue`, but a discipline page puts
+ * both the class and the attribute on the same <main> — a descendant selector
+ * alone never matches that, so the whole page silently fell back to --ink. */
+.catalogue[data-world="physics"],
+.catalogue [data-world="physics"],
+.apparatus[data-world="physics"] { --pigment: var(--pig-physics); }
+
+.catalogue[data-world="chemistry"],
+.catalogue [data-world="chemistry"],
+.apparatus[data-world="chemistry"] { --pigment: var(--pig-chemistry); }
+
+.catalogue[data-world="mathematics"],
+.catalogue [data-world="mathematics"],
+.apparatus[data-world="mathematics"] { --pigment: var(--pig-mathematics); }
+
+.catalogue[data-world="biology"],
+.catalogue [data-world="biology"],
+.apparatus[data-world="biology"] { --pigment: var(--pig-biology); }
+
+.catalogue .shell {
+  width: 100%;
+  max-width: var(--measure);
+  margin-inline: auto;
+  padding-inline: var(--s4);
+}
+
+@media (min-width: 768px) {
+  .catalogue .shell { padding-inline: var(--s6); }
+}
+
+/* --- shared type roles ------------------------------------------------- */
+
+.catalogue .data {
+  font-family: var(--font-data), ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+
+.catalogue .display {
+  font-family: var(--font-display), Georgia, serif;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 0.98;
+}
+
+.catalogue .caption {
+  font-style: italic;
+  color: var(--ink-2);
+}
+
+.catalogue .focus:focus-visible {
+  outline: 2px solid var(--pigment);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* --- masthead ---------------------------------------------------------- */
+
+.catalogue .masthead {
+  padding-block: var(--s5) var(--s6);
+  border-bottom: 1px solid var(--rule);
+}
+
+.catalogue .masthead-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s3) var(--s5);
+  align-items: baseline;
+  justify-content: space-between;
+  color: var(--ink-3);
+  padding-bottom: var(--s5);
+  border-bottom: 1px solid var(--rule-soft);
+}
+
+.catalogue .masthead-body {
+  display: grid;
+  gap: var(--s6);
+  padding-top: var(--s6);
+  align-items: end;
+}
+
+@media (min-width: 900px) {
+  .catalogue .masthead-body {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    gap: var(--s7);
+  }
+}
+
+.catalogue .masthead h1 {
+  font-family: var(--font-display), Georgia, serif;
+  font-weight: 400;
+  letter-spacing: -0.025em;
+  line-height: 0.96;
+  font-size: clamp(2.5rem, 5.6vw, 4rem);
+  margin: 0;
+  text-wrap: balance;
+}
+
+.catalogue .masthead h1 em {
+  font-style: italic;
+  color: var(--ink-2);
+}
+
+.catalogue .masthead p {
+  margin: var(--s4) 0 0;
+  max-width: 34rem;
+  color: var(--ink-2);
+  font-size: 1.0625rem;
+}
+
+/* The masthead specimen states the page's thesis: an equation, and the fact
+ * that one of its quantities is yours to move. */
+.catalogue .masthead-specimen {
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  background: var(--paper-raise);
+  padding: var(--s5) var(--s4);
+  text-align: center;
+}
+
+.catalogue .masthead-specimen .specimen-body { font-size: 1.5rem; }
+
+.catalogue .masthead-specimen figcaption {
+  margin-top: var(--s4);
+  padding-top: var(--s3);
+  border-top: 1px solid var(--rule-soft);
+  color: var(--ink-3);
+}
+
+/* --- filters ----------------------------------------------------------- */
+
+.catalogue .filters {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: color-mix(in oklab, var(--paper) 88%, transparent);
+  backdrop-filter: saturate(160%) blur(12px);
+  -webkit-backdrop-filter: saturate(160%) blur(12px);
+  border-bottom: 1px solid var(--rule);
+}
+
+.catalogue .filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s2) var(--s4);
+  padding-block: var(--s3);
+}
+
+.catalogue .filter-row + .filter-row { border-top: 1px solid var(--rule-soft); }
+
+.catalogue .filter-label {
+  color: var(--ink-3);
+  width: 4.5rem;
+  flex-shrink: 0;
+}
+
+.catalogue .filter-set {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s1) var(--s3);
+  flex: 1 1 16rem;
+}
+
+/* Filters are set as catalogue entries, not pills: the underline is the only
+ * state change, so a row of them reads as a line of type. */
+.catalogue .chip {
+  font-family: var(--font-data), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  background: none;
+  border: 0;
+  border-bottom: 1px solid transparent;
+  padding: var(--s2) var(--s1);
+  cursor: pointer;
+  transition: color var(--lift), border-color var(--lift);
+}
+
+.catalogue .chip:hover { color: var(--ink); }
+
+.catalogue .chip[aria-pressed="true"] {
+  color: var(--pigment);
+  border-bottom-color: var(--pigment);
+}
+
+.catalogue .search {
+  flex: 1 1 14rem;
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  border-bottom: 1px solid var(--rule);
+}
+
+.catalogue .search input {
+  flex: 1;
+  border: 0;
+  background: none;
+  padding: var(--s2) 0;
+  font-family: inherit;
+  font-size: 0.9375rem;
+  color: var(--ink);
+  min-width: 0;
+}
+
+.catalogue .search input::placeholder { color: var(--ink-3); font-style: italic; }
+
+/* The field is a rule rather than a box, so an outline would float away from
+ * it. The rule itself thickens and darkens instead — a bare colour change on a
+ * 1px hairline is too easy to miss when tabbing. */
+.catalogue .search input:focus { outline: none; }
+
+.catalogue .search:focus-within {
+  border-bottom-color: var(--ink);
+  box-shadow: 0 1px 0 0 var(--ink);
+}
+
+.catalogue .tally {
+  color: var(--ink-3);
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+/* --- plate grid -------------------------------------------------------- */
+
+.catalogue .plates {
+  view-transition-name: plate-grid;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-auto-rows: minmax(11rem, auto);
+  grid-auto-flow: dense;
+  gap: 1px;
+
+  /* The gutter is paper, not rule, and each plate draws its own hairline.
+   *
+   * A chapter holds 1–14 plates, so `dense` frequently cannot tile them — seven
+   * quarters and one full plate leave four cells empty in a four-column grid.
+   * When the container was the rule colour those empty cells rendered as solid
+   * grey panels and read as broken layout. Now they are simply paper. */
+  background: var(--paper);
+  margin-block: var(--s6) var(--s8);
+}
+
+@media (min-width: 640px) {
+  .catalogue .plates { grid-template-columns: repeat(2, 1fr); }
+  .catalogue .plate[data-size="full"] { grid-column: span 2; grid-row: span 2; }
+  .catalogue .plate[data-size="half"] { grid-column: span 2; }
+}
+
+@media (min-width: 1024px) {
+  .catalogue .plates { grid-template-columns: repeat(4, 1fr); }
+  .catalogue .plate[data-size="half"] { grid-column: span 2; grid-row: span 1; }
+}
+
+/* A plate is the link. The old lobby made you select a card and then press a
+ * separate button in a sidebar, which cost a click and hid the destination. */
+.catalogue .plate {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+  padding: var(--s4);
+  background: var(--paper);
+  box-shadow: 0 0 0 1px var(--rule-soft);
+  color: inherit;
+  text-decoration: none;
+  transition: background var(--lift), transform var(--lift);
+}
+
+.catalogue .plate:hover {
+  background: var(--paper-raise);
+  transform: translateY(-2px);
+  z-index: 1;
+}
+
+/* The pigment edge is the only place a world's colour appears at full strength,
+ * which keeps four accents on one page from turning into confetti. */
+.catalogue .plate::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 2px;
+  background: var(--pigment);
+  opacity: 0;
+  transition: opacity var(--lift);
+}
+
+.catalogue .plate:hover::before,
+.catalogue .plate:focus-visible::before { opacity: 1; }
+
+.catalogue .plate-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s3);
+}
+
+.catalogue .plate-no { color: var(--pigment); }
+.catalogue .plate-level { color: var(--ink-3); }
+
+.catalogue .plate h3 {
+  margin: 0;
+  font-family: var(--font-display), Georgia, serif;
+  font-weight: 400;
+  letter-spacing: -0.015em;
+  line-height: 1.05;
+  font-size: 1.375rem;
+}
+
+.catalogue .plate[data-size="full"] h3 { font-size: clamp(1.75rem, 2.4vw, 2.25rem); }
+.catalogue .plate[data-size="half"] h3 { font-size: 1.625rem; }
+
+.catalogue .plate .caption {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+}
+
+/* Quarter plates have no specimen to anchor them, so the caption has to stay
+ * short enough that the title and the call to action keep their weight. */
+.catalogue .plate[data-size="quarter"] .caption {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+}
+
+/* Bottom-aligned rather than baseline-aligned: a two-word lab name wraps on a
+ * quarter plate, and baseline alignment would leave the call to action
+ * floating against the first of the two lines. */
+.catalogue .plate-foot {
+  margin-top: auto;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--s3);
+  padding-top: var(--s3);
+  border-top: 1px solid var(--rule-soft);
+}
+
+.catalogue .plate-lab {
+  color: var(--ink-3);
+  letter-spacing: 0.08em;
+}
+
+.catalogue .plate-cta {
+  color: var(--pigment);
+  white-space: nowrap;
+}
+
+.catalogue .plate-cta span {
+  display: inline-block;
+  transition: transform var(--lift);
+}
+
+.catalogue .plate:hover .plate-cta span { transform: translateX(4px); }
+
+/* --- the specimen field ------------------------------------------------ */
+
+/* The signature element. The equation is the subject of the plate, the way an
+ * engraved specimen is the subject of a catalogue plate — not a footnote under
+ * the title, which is where the previous design buried it. */
+.catalogue .specimen {
+  position: relative;
+  margin: var(--s2) 0;
+  padding: var(--s4) var(--s3) var(--s5);
+  text-align: center;
+  background: var(--paper-deep);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+/* A full plate is two rows tall, so its specimen absorbs the slack instead of
+ * letting a gap open up between the caption and the foot. */
+.catalogue .plate[data-size="full"] .specimen {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.catalogue .specimen-body {
+  font-size: 1.25rem;
+  color: var(--ink);
+  line-height: 1.4;
+}
+
+.catalogue .plate[data-size="full"] .specimen-body { font-size: 1.5rem; }
+
+.catalogue .specimen .katex { font-size: 1em; }
+
+/* Two rules that part and rejoin on hover: the two sides of the relation being
+ * tested against each other, which is the whole mechanic of a mission.
+ *
+ * They hang off the equation rather than the field, so they stay tucked under
+ * the specimen on a full plate where the field grows to absorb slack. */
+.catalogue .specimen-body { position: relative; }
+
+.catalogue .specimen .specimen-body::after,
+.catalogue .specimen .specimen-body::before {
+  content: "";
+  position: absolute;
+  bottom: -0.85rem;
+  width: 3rem;
+  height: 1px;
+  background: var(--pigment);
+  opacity: 0.45;
+  transition: transform 420ms cubic-bezier(0.33, 0.9, 0.35, 1), opacity var(--lift);
+}
+
+.catalogue .specimen .specimen-body::before { right: 50%; }
+.catalogue .specimen .specimen-body::after { left: 50%; }
+
+.catalogue .plate:hover .specimen-body::before { transform: translateX(-1.5rem); opacity: 1; }
+.catalogue .plate:hover .specimen-body::after { transform: translateX(1.5rem); opacity: 1; }
+
+/* --- empty state ------------------------------------------------------- */
+
+.catalogue .empty {
+  grid-column: 1 / -1;
+  background: var(--paper);
+  padding: var(--s7) var(--s4);
+  text-align: center;
+}
+
+.catalogue .empty h2 {
+  margin: 0;
+  font-family: var(--font-display), Georgia, serif;
+  font-weight: 400;
+  font-size: 2rem;
+}
+
+.catalogue .empty p { margin: var(--s3) 0 var(--s5); color: var(--ink-2); }
+
+.catalogue .reset {
+  font-family: var(--font-data), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--ink);
+  padding-bottom: var(--s1);
+  cursor: pointer;
+}
+
+/* --- breadcrumb -------------------------------------------------------- */
+
+/* The crumb is a rule that appears on hover rather than a permanent underline:
+ * a masthead meta row with three underlined items reads as a nav bar, which is
+ * not what a catalogue frontispiece should look like. */
+.catalogue .crumb {
+  color: var(--ink-3);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color var(--lift), border-color var(--lift);
+}
+
+.catalogue .crumb:hover {
+  color: var(--ink);
+  border-bottom-color: var(--rule);
+}
+
+/* --- chapter index ----------------------------------------------------- */
+
+/* Chapters are a numbered list because a chapter sequence genuinely is one —
+ * the ordinal is the teaching order, not decoration. */
+.catalogue .chapters {
+  list-style: none;
+  margin: var(--s6) 0 var(--s8);
+  padding: 0;
+  border-top: 1px solid var(--rule-soft);
+}
+
+.catalogue .chapters li { border-bottom: 1px solid var(--rule-soft); }
+
+.catalogue .chapter {
+  position: relative;
+  display: grid;
+  grid-template-columns: 3.5rem 1fr;
+  gap: var(--s2) var(--s4);
+  align-items: baseline;
+  padding: var(--s4) var(--s3);
+  color: inherit;
+  text-decoration: none;
+  transition: background var(--lift);
+}
+
+.catalogue .chapter:hover { background: var(--paper-raise); }
+
+/* Same pigment edge as a plate, for the same reason: it is the only place the
+ * discipline's colour appears at full strength. */
+.catalogue .chapter::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 2px;
+  background: var(--pigment);
+  opacity: 0;
+  transition: opacity var(--lift);
+}
+
+.catalogue .chapter:hover::before,
+.catalogue .chapter:focus-visible::before { opacity: 1; }
+
+.catalogue .chapter-no { color: var(--pigment); }
+
+.catalogue .chapter-body h2 {
+  font-family: var(--font-display), Georgia, serif;
+  font-weight: 400;
+  font-size: 1.5rem;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+  margin: 0;
+}
+
+.catalogue .chapter-body .caption { margin: var(--s2) 0 0; }
+
+.catalogue .chapter-count {
+  grid-column: 2;
+  color: var(--ink-3);
+  letter-spacing: 0.08em;
+}
+
+@media (min-width: 768px) {
+  .catalogue .chapter { grid-template-columns: 3.5rem 1fr auto; }
+  .catalogue .chapter-count { grid-column: 3; }
+}
+
+/* --- directory (frontispiece) ------------------------------------------ */
+
+/* Four plates, so the grid is fixed at two columns rather than inheriting the
+ * catalogue's auto-flow. `dense` exists to pack a mixed field of 100; over four
+ * equal entries it only risks reordering them away from teaching sequence. */
+.catalogue .plates.directory {
+  grid-auto-flow: row;
+  grid-auto-rows: minmax(14rem, auto);
+  /* The catalogue grid ends a page, so it reserves --s8 below itself. The
+   * directory is followed by a line of copy, which belongs with it. */
+  margin-block: var(--s6) var(--s5);
+}
+
+@media (min-width: 640px) {
+  .catalogue .plates.directory { grid-template-columns: repeat(2, 1fr); }
+  .catalogue .plates.directory .plate[data-size="half"] { grid-column: span 1; }
+}
+
+@media (min-width: 1024px) {
+  .catalogue .plates.directory { grid-template-columns: repeat(2, 1fr); }
+}
+
+.catalogue .plate-no { font-size: 0.95rem; }
+
+/* The contents list is set as data, not prose: these are index entries, and
+ * they should scan as a column of keys rather than read as a sentence. */
+.catalogue .plate-contents {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s1);
+  color: var(--ink-3);
+  letter-spacing: 0.06em;
+  text-transform: none;
+}
+
+.catalogue .plate-contents li { position: relative; padding-left: var(--s4); }
+
+.catalogue .plate-contents li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 0.75rem;
+  height: 1px;
+  background: var(--pigment);
+  opacity: 0.5;
+}
+
+.catalogue .plate-contents-more { color: var(--ink-3); font-style: italic; }
+.catalogue .plate-contents-more::before { display: none; }
+
+.catalogue .directory-note,
+.catalogue .coverage-note {
+  margin: 0 0 var(--s8);
+  color: var(--ink-2);
+  max-width: 42rem;
+}
+
+
+/* --- board lens --------------------------------------------------------- */
+
+.catalogue .board-lens {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--s2) var(--s4);
+}
+
+/* The syllabus line under a chapter title. Monospace and pigmented so it reads
+ * as a structural key rather than a subtitle competing with the serif. */
+.catalogue .chapter-board {
+  display: block;
+  margin-top: var(--s2);
+  color: var(--pigment);
+  letter-spacing: 0.08em;
+  text-transform: none;
+}
+
+.catalogue .masthead-glyph {
+  display: inline-block;
+  margin-right: var(--s3);
+  font-size: 0.55em;
+  vertical-align: middle;
+  color: var(--pigment);
+}
+
+/* ===========================================================================
+ * Apparatus — the construct and explore panels.
+ *
+ * These mount inside the mission player, not the catalogue, so the panel is a
+ * ruled sheet dropped onto the portal's white page rather than a full-bleed
+ * background. One rule governs the whole thing: serif states the task,
+ * monospace states every number and every machine verdict. A learner should be
+ * able to tell instruction from instrumentation without reading either.
+ * ======================================================================== */
+
+.apparatus {
+  padding: var(--s5) var(--s4);
+  border-radius: 14px;
+  font-size: 0.9375rem;
+}
+
+/* `.data` and `.focus` are declared under `.catalogue`, which the mission player
+ * is not. Without these two rules every metric label fell back to the body serif
+ * and the interactive controls had no visible keyboard focus at all. */
+.apparatus .data {
+  font-family: var(--font-data), ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+
+.apparatus output,
+.apparatus .construct-capacity {
+  font-family: var(--font-data), ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.apparatus .focus:focus-visible {
+  outline: 2px solid var(--pigment);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.apparatus h4 {
+  font-family: var(--font-data), ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 0 0 var(--s3);
+}
+
+/* The task, set in the display serif. It is the only sentence in the panel and
+ * it should read as a caption on a plate, not as UI chrome. */
+.apparatus .apparatus-brief {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(1.125rem, 2.4vw, 1.4rem);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin: 0 0 var(--s5);
+  text-wrap: balance;
+}
+
+/* --- construct ---------------------------------------------------------- */
+
+.construct-slots {
+  display: grid;
+  gap: 1px;
+  background: var(--rule-soft);
+  border: 1px solid var(--rule-soft);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+@media (min-width: 640px) {
+  .construct-slots { grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); }
+}
+
+.construct-slot {
+  position: relative;
+  background: var(--paper);
+  padding: var(--s4) var(--s3);
+  min-height: 8.5rem;
+  transition: background var(--lift);
+}
+
+/* Pigment edge on the slot, matching the plate treatment — the one place the
+ * discipline's colour appears at full strength. */
+.construct-slot::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 2px;
+  background: var(--pigment);
+  opacity: 0;
+  transition: opacity var(--lift);
+}
+
+.construct-slot:has(.construct-item)::before { opacity: 0.55; }
+
+.construct-capacity {
+  font-variant-numeric: tabular-nums;
+  color: var(--pigment);
+  margin-left: var(--s2);
+}
+
+.construct-tray {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s2);
+  align-items: flex-start;
+}
+
+.construct-pool .construct-tray { flex-direction: column; align-items: stretch; }
+
+/* A placed item is a chip you can click to take back. Monospace, because on a
+ * construct plate the items are countable things, not prose. */
+.construct-item {
+  font-family: var(--font-data), ui-monospace, monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  background: var(--paper-raise);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  padding: var(--s2) var(--s3);
+  cursor: pointer;
+  transition: border-color var(--lift), color var(--lift);
+}
+
+.construct-item:hover { border-color: var(--pigment); color: var(--pigment); }
+
+.construct-item-source {
+  font-family: var(--font-data), ui-monospace, monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  cursor: default;
+  border: 0;
+  background: none;
+  padding: 0;
+  min-width: 6rem;
+}
+
+.construct-pool {
+  margin-top: var(--s5);
+  padding-top: var(--s4);
+  border-top: 1px solid var(--rule);
+}
+
+.construct-pool li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--s2) var(--s3);
+  padding: var(--s2) 0;
+  border-bottom: 1px solid var(--rule-soft);
+}
+
+.construct-pool li:last-child { border-bottom: 0; }
+
+/* One send button per destination. Underline-only, the same treatment the
+ * catalogue filters use — a row of destinations should read as a line of type
+ * rather than a bank of buttons competing with the slots above. */
+.construct-send {
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  background: none;
+  border: 0;
+  border-bottom: 1px solid transparent;
+  padding: var(--s1) 0;
+  cursor: pointer;
+  transition: color var(--lift), border-color var(--lift);
+}
+
+.construct-send:hover { color: var(--pigment); border-bottom-color: var(--pigment); }
+
+.construct-empty {
+  font-family: var(--font-text), Georgia, serif;
+  font-size: 0.875rem;
+  color: var(--ink-3);
+}
+
+/* Satisfied is stated by the rule going solid and the field lifting, not by a
+ * green banner. The completion card already says it in words. */
+.construct[data-satisfied] .construct-slots { background: var(--pigment); }
+.construct[data-satisfied] .construct-slot { background: var(--paper-raise); }
+.construct[data-satisfied] .construct-slot::before { opacity: 1; }
+.construct[data-satisfied] .construct-send { visibility: hidden; }
+
+.construct-error {
+  margin-top: var(--s4);
+  padding: var(--s3);
+  font-size: 0.6875rem;
+  color: oklch(0.5 0.16 25);
+  border: 1px dashed oklch(0.5 0.16 25 / 0.4);
+  border-radius: 2px;
+}
+
+/* --- explore ------------------------------------------------------------ */
+
+.explore-readout {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--s2) var(--s4);
+  padding-bottom: var(--s3);
+  border-bottom: 1px solid var(--rule);
+}
+
+.explore-label { color: var(--ink-3); }
+
+/* The measured value is the subject of an explore panel, so it gets the size
+ * the equation gets on a plate — but in monospace, because it changes and a
+ * proportional face makes a moving number jitter. */
+.explore-value {
+  font-family: var(--font-data), ui-monospace, monospace;
+  font-size: clamp(1.75rem, 5vw, 2.5rem);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: var(--ink);
+  transition: color var(--lift);
+}
+
+.explore[data-in-window] .explore-value { color: var(--pigment); }
+
+.explore-window { color: var(--ink-3); margin-left: auto; }
+
+.explore-hold {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+  margin: var(--s4) 0 var(--s5);
+}
+
+.explore-hold .data { color: var(--ink-3); transition: color var(--lift); }
+.explore[data-in-window] .explore-hold .data { color: var(--pigment); }
+
+/* Progress toward the hold, not toward the window. A hairline that fills. */
+.explore-meter {
+  height: 2px;
+  background: var(--rule-soft);
+  border-radius: 1px;
+  overflow: hidden;
+}
+
+.explore-meter > span {
+  display: block;
+  height: 100%;
+  background: var(--pigment);
+  transition: width 220ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.explore-controls { display: flex; flex-direction: column; gap: var(--s4); }
+
+.explore-control {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: var(--s2) var(--s3);
+}
+
+.explore-control .data { color: var(--ink-2); }
+
+.explore-control input[type="range"] {
+  grid-column: 1 / -1;
+  width: 100%;
+  accent-color: var(--pigment);
+  cursor: pointer;
+}
+
+.explore-control output {
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  text-align: right;
+}
+
+.explore-checkpoint {
+  margin-top: var(--s5);
+  padding-top: var(--s4);
+  border-top: 1px solid var(--rule);
+}
+
+/* The checkpoint question is the second half of the task, so it takes the same
+ * serif the brief does. */
+.explore-checkpoint h4 {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.125rem;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  text-transform: none;
+  color: var(--ink);
+  margin-bottom: var(--s4);
+}
+
+.explore-checkpoint ul {
+  list-style: none;
+  margin: 0 0 var(--s3);
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s2);
+}
+
+.explore-option {
+  font-family: var(--font-data), ui-monospace, monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+  background: var(--paper-raise);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  padding: var(--s2) var(--s4);
+  cursor: pointer;
+  transition: border-color var(--lift), color var(--lift);
+}
+
+.explore-option:hover { border-color: var(--pigment); }
+
+.explore-option[aria-pressed="true"] {
+  border-color: var(--pigment);
+  color: var(--pigment);
+}
+
+.explore-checkpoint .caption {
+  font-family: var(--font-text), Georgia, serif;
+  font-style: italic;
+  font-size: 0.875rem;
+  color: var(--ink-2);
+  margin: 0;
+}
+
+/* --- motion budget ----------------------------------------------------- */
+
+::view-transition-old(plate-grid),
+::view-transition-new(plate-grid) {
+  animation-duration: 220ms;
+  animation-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .catalogue .plate,
+  .catalogue .plate-cta span,
+  .catalogue .specimen-body::before,
+  .catalogue .specimen-body::after {
+    transition: none;
+  }
+
+  .catalogue .plate,
+  .catalogue .chapter,
+  .catalogue .crumb,
+  .apparatus .construct-slot,
+  .apparatus .construct-slot::before,
+  .apparatus .construct-item,
+  .apparatus .construct-send,
+  .apparatus .explore-value,
+  .apparatus .explore-hold .data,
+  .apparatus .explore-meter > span,
+  .apparatus .explore-option { transition: none; }
+
+  .catalogue .plate:hover { transform: none; }
+  .catalogue .plate:hover .plate-cta span { transform: none; }
+  .catalogue .plate:hover .specimen-body::before,
+  .catalogue .plate:hover .specimen-body::after { transform: none; }
+
+  ::view-transition-old(plate-grid),
+  ::view-transition-new(plate-grid) { animation: none; }
+}

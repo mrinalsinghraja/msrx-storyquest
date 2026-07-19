@@ -54,12 +54,17 @@ export default function StoryQuestShell({
 
           {visual ? <div className="premium-ring rounded-2xl">{visual}</div> : null}
 
-          <article className="space-y-4 py-6 text-[15px] leading-7 text-[var(--text-secondary)] sm:text-base sm:leading-8">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--accent-cyan)]">Narrative feed</p>
-            {paragraphs.map((paragraph, index) => (
-              <p key={`${index}-${paragraph.slice(0, 28)}`}>{paragraph}</p>
-            ))}
-          </article>
+          {/* The heading only earns its place when there is a feed under it.
+            * Construct and explore state their brief on the apparatus itself and
+            * pass no paragraphs, which left the label stranded over blank space. */}
+          {paragraphs?.length ? (
+            <article className="space-y-4 py-6 text-[15px] leading-7 text-[var(--text-secondary)] sm:text-base sm:leading-8">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--accent-cyan)]">Narrative feed</p>
+              {paragraphs.map((paragraph, index) => (
+                <p key={`${index}-${paragraph.slice(0, 28)}`}>{paragraph}</p>
+              ))}
+            </article>
+          ) : null}
 
           {children}
         </div>
