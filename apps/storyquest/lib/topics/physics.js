@@ -61,7 +61,7 @@ const physics = [
   {
     slug: 'static-friction',
     title: 'Static friction',
-    lab: 'lever',
+    lab: 'friction',
     formula: 'F_f = \\mu_s N',
     scenario: 'a loading ramp where crates keep sliding on wet steel',
     crisis: 'The grip coefficient is 0.35 and the crate needs 28 N of friction to stay put. Not enough weight is pressing it down.',
@@ -78,7 +78,7 @@ const physics = [
   {
     slug: 'newtons-first-law',
     title: "Newton's first law",
-    lab: 'lever',
+    lab: 'force',
     formula: '\\sum F = 0',
     scenario: 'a cable car stalled halfway across a gorge',
     crisis: 'Drag and cable friction pull backwards with 180 N. The drive motor is applying the wrong thrust, so the car keeps drifting instead of holding station.',
@@ -95,7 +95,7 @@ const physics = [
   {
     slug: 'newtons-second-law',
     title: "Newton's second law",
-    lab: 'lever',
+    lab: 'force',
     formula: 'F = ma',
     scenario: 'a magnetic launch sled on a test track',
     crisis: 'The 6.5 kg sled must leave the rail carrying exactly 91 N of drive force, but the acceleration setpoint is wrong.',
@@ -112,7 +112,7 @@ const physics = [
   {
     slug: 'momentum-transfer',
     title: 'Momentum transfer',
-    lab: 'lever',
+    lab: 'collision',
     formula: 'p = mv',
     scenario: 'a docking clamp catching a drifting supply pod',
     crisis: 'The clamp absorbs at most 8.4 kg·m/s. The 1.4 kg pod is closing too fast and will bounce off instead of latching.',
@@ -129,7 +129,7 @@ const physics = [
   {
     slug: 'energy-conservation',
     title: 'Energy conservation',
-    lab: 'lever',
+    lab: 'energy',
     formula: 'E_T = E_k + E_p',
     scenario: 'a gravity-fed water tower feeding an emergency turbine',
     crisis: 'The system holds 500 J in total. Stored height energy accounts for 320 J. The kinetic reading is drifting and the turbine is stalling.',
@@ -214,7 +214,7 @@ const physics = [
   {
     slug: 'magnetic-flux',
     title: 'Magnetic flux',
-    lab: 'circuit',
+    lab: 'magnet',
     formula: '\\Phi_B = BA',
     scenario: 'an induction charging pad under a hospital trolley',
     crisis: 'The 0.04 m² receiver coil needs 0.012 Wb of flux to charge. The field strength is set too low to couple.',
@@ -231,7 +231,7 @@ const physics = [
   {
     slug: 'electromagnet-strength',
     title: 'Electromagnet strength',
-    lab: 'circuit',
+    lab: 'magnet',
     formula: 'B \\propto NI',
     scenario: 'a scrapyard lifting magnet that keeps dropping its load',
     crisis: 'Holding the load needs 0.32 T. Each turn of the coil contributes 0.0008 T at the working current, and the winding count is wrong.',
@@ -299,7 +299,7 @@ const physics = [
   {
     slug: 'mirror-angles',
     title: 'Mirror angles',
-    lab: 'lens',
+    lab: 'mirror',
     formula: '\\theta_i = \\theta_r',
     scenario: 'a periscope relay assembled to see over a debris wall',
     crisis: 'The reflected ray must leave at 38° to reach the second mirror. The incoming angle is set wrong and the image misses entirely.',
@@ -333,7 +333,7 @@ const physics = [
   {
     slug: 'pressure-systems',
     title: 'Pressure systems',
-    lab: 'particle',
+    lab: 'hydraulic',
     formula: 'P = \\frac{F}{A}',
     scenario: 'an ice-shelf research hut resting on soft snow',
     crisis: 'The hut presses down with 4500 N. The snow collapses above 18 kPa, and the current footing area is far too small.',
@@ -350,7 +350,7 @@ const physics = [
   {
     slug: 'hydraulic-lifts',
     title: 'Hydraulic lifts',
-    lab: 'particle',
+    lab: 'hydraulic',
     formula: '\\frac{F_1}{A_1} = \\frac{F_2}{A_2}',
     scenario: 'a workshop jack lifting a collapsed roof beam',
     crisis: 'A hand pump gives 250 N on a 0.005 m² piston. The 0.08 m² output ram is not producing the force the beam needs.',
@@ -367,7 +367,7 @@ const physics = [
   {
     slug: 'heat-transfer',
     title: 'Heat transfer',
-    lab: 'reaction',
+    lab: 'thermal',
     formula: 'Q = mc\\Delta T',
     scenario: 'a shelter boiler warming water for a hundred people',
     crisis: 'The burner delivers 209 kJ into 2.5 kg of water. The temperature rise setpoint is wrong, so the controller keeps cutting out.',
@@ -384,7 +384,7 @@ const physics = [
   {
     slug: 'phase-energy',
     title: 'Phase energy',
-    lab: 'reaction',
+    lab: 'thermal',
     formula: 'Q = mL',
     scenario: 'an ice core lab melting a sample without overheating it',
     crisis: 'The chamber can deliver 100.2 kJ. Ice needs 334 kJ per kilogram to melt, and the sample mass is set wrong.',
@@ -401,7 +401,7 @@ const physics = [
   {
     slug: 'projectile-paths',
     title: 'Projectile paths',
-    lab: 'wave',
+    lab: 'projectile',
     formula: 'R = \\frac{v_0^2\\sin 2\\theta}{g}',
     scenario: 'a line-throwing gun firing a rescue rope across a river',
     crisis: 'The far bank is 96 m away. The launcher is locked at 40°, and the muzzle speed is wrong — every shot falls short.',
@@ -418,7 +418,7 @@ const physics = [
   {
     slug: 'gravity-fields',
     title: 'Gravity fields',
-    lab: 'wave',
+    lab: 'orbit',
     formula: 'F_g = \\frac{Gm_1m_2}{r^2}',
     scenario: 'a survey satellite choosing a stable orbit altitude',
     crisis: 'Station-keeping works only while gravitational pull sits at 4.0 kN. The current orbital radius puts the craft far outside that window.',

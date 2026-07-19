@@ -4,7 +4,7 @@ const biology = [
   {
     slug: 'cell-membranes',
     title: 'Cell membranes',
-    lab: 'cell',
+    lab: 'osmosis',
     formula: '\\Psi_{in} = \\Psi_{out}',
     scenario: 'a tissue sample being kept alive during transport to a burns unit',
     crisis: 'The surrounding fluid sits at 0.9% solute. The bathing solution inside the container is set wrong, so the cells are swelling.',
@@ -55,7 +55,7 @@ const biology = [
   {
     slug: 'chloroplast-energy',
     title: 'Chloroplast energy',
-    lab: 'ecosystem',
+    lab: 'leaf',
     formula: 'glucose \\propto light',
     scenario: 'a vertical farm rationing electricity during a grid shortage',
     crisis: 'The crop needs 1.35 units of glucose per day. Each unit of light yields 0.045, and the lamp schedule is wrong.',
@@ -72,7 +72,7 @@ const biology = [
   {
     slug: 'mitochondria-output',
     title: 'Mitochondria output',
-    lab: 'lungs',
+    lab: 'mitochondria',
     formula: 'ATP \\propto O_2',
     scenario: 'an altitude training camp tracking why athletes fade after an hour',
     crisis: 'The session demands 88.4 units of ATP. Each unit of oxygen yields 2.6, and the oxygen delivery target is wrong.',
@@ -89,7 +89,7 @@ const biology = [
   {
     slug: 'cell-division',
     title: 'Cell division',
-    lab: 'cell',
+    lab: 'mitosis',
     formula: 'n = rt',
     scenario: 'a wound culture being grown to patch a graft',
     crisis: 'The graft needs 27 rounds of division. The culture divides 1.8 times per hour, and the incubation window is wrong.',
@@ -106,7 +106,7 @@ const biology = [
   {
     slug: 'dna-instructions',
     title: 'DNA instructions',
-    lab: 'cell',
+    lab: 'dna',
     formula: '3\\ bases = 1\\ codon',
     scenario: 'a gene sequencer flagging a read as corrupted',
     crisis: 'The clean read is 111 bases long. Every codon takes three bases, and the codon count on the report is wrong.',
@@ -123,7 +123,7 @@ const biology = [
   {
     slug: 'protein-synthesis',
     title: 'Protein synthesis',
-    lab: 'cell',
+    lab: 'dna',
     formula: 'codon \\rightarrow amino\\ acid',
     scenario: 'an insulin production line running short of one amino acid',
     crisis: 'The chain needs 42 amino acids. Each comes from one codon, and the codon count loaded into the ribosome model is wrong.',
@@ -225,7 +225,7 @@ const biology = [
   {
     slug: 'water-cycles',
     title: 'Water cycles',
-    lab: 'ecosystem',
+    lab: 'watercycle',
     formula: 'E + T = P',
     scenario: 'a catchment model that keeps predicting phantom floods',
     crisis: 'Evaporation accounts for 340 mm against a 505 mm total. The precipitation figure entered is wrong, so the balance never closes.',
@@ -242,7 +242,7 @@ const biology = [
   {
     slug: 'photosynthesis',
     title: 'Photosynthesis',
-    lab: 'ecosystem',
+    lab: 'leaf',
     formula: '6CO_2 + 6H_2O \\rightarrow C_6H_{12}O_6 + 6O_2',
     scenario: 'a sealed biosphere module scrubbing its own air',
     crisis: 'The plants must fix 0.8 mol of glucose. Each glucose takes six carbon dioxide molecules, and the CO₂ supply is set wrong.',
@@ -293,7 +293,7 @@ const biology = [
   {
     slug: 'cardiac-pulse',
     title: 'Cardiac pulse',
-    lab: 'lungs',
+    lab: 'heart',
     formula: 'CO = HR \\times SV',
     scenario: 'a marathon medical tent assessing a collapsed runner',
     crisis: 'The runner needs 5.4 L per minute of cardiac output. Each beat pushes 72 mL, and the assumed heart rate is wrong.',
@@ -310,7 +310,7 @@ const biology = [
   {
     slug: 'blood-transport',
     title: 'Blood transport',
-    lab: 'lungs',
+    lab: 'heart',
     formula: 'Q = \\frac{\\Delta P}{R}',
     scenario: 'a dialysis line that keeps alarming for low flow',
     crisis: 'The circuit needs 0.65 L/min of flow through a fixed resistance. The pressure difference across the line is set wrong.',
@@ -327,7 +327,7 @@ const biology = [
   {
     slug: 'nervous-signals',
     title: 'Nervous signals',
-    lab: 'cell',
+    lab: 'neuron',
     formula: 'v = \\frac{d}{t}',
     scenario: 'a nerve conduction test after a cycling accident',
     crisis: 'The signal must cross 1.8 m of nerve in 0.03 s to count as healthy. The measured conduction speed is wrong.',
@@ -344,7 +344,7 @@ const biology = [
   {
     slug: 'plant-tropisms',
     title: 'Plant tropisms',
-    lab: 'ecosystem',
+    lab: 'leaf',
     formula: 'growth \\rightarrow stimulus',
     scenario: 'a research greenhouse where seedlings are bending into the walkway',
     crisis: 'The stems are tracking a light source at 38° off vertical. The corrective lamp angle is set wrong, so they keep leaning.',
@@ -378,7 +378,7 @@ const biology = [
   {
     slug: 'biodiversity',
     title: 'Biodiversity',
-    lab: 'ecosystem',
+    lab: 'biodiversity',
     formula: 'stability \\propto biodiversity',
     scenario: 'a restored wetland being assessed for legal protection',
     crisis: 'The wetland can sustain 24 species at its current size. The recorded species count does not match, so the assessment fails.',
@@ -395,7 +395,7 @@ const biology = [
   {
     slug: 'human-digestion',
     title: 'Human digestion',
-    lab: 'osmosis',
+    lab: 'digestion',
     formula: 'absorbed = 0.62 \\times intake',
     scenario: 'a nutrition plan for a recovery ward',
     crisis: 'Patients must absorb 27.9 units of nutrient. Only 62% of intake is absorbed, and the prescribed intake is wrong.',

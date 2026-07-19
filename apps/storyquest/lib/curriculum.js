@@ -4,6 +4,7 @@ import mathematics from './topics/mathematics';
 import biology from './topics/biology';
 import { buildStory } from './story-builder';
 import { createModel } from './models';
+import { LABS } from './labs';
 
 const subjects = {
   physics: { label: 'Physics', icon: '⚛', color: 'cyan', blurb: 'Forces, circuits, waves, and optics.', topics: physics },
@@ -59,6 +60,26 @@ if (process.env.NODE_ENV !== 'production') {
     }
     if (model.evaluate(mission.model.start).balanced) {
       throw new Error(`Mission ${mission.id}: starts already balanced, so there is no puzzle.`);
+    }
+    if (!LABS[mission.lab]) {
+      throw new Error(`Mission ${mission.id}: unknown lab "${mission.lab}".`);
+    }
+  }
+
+  // A subject that leans on one apparatus stops feeling like 25 missions. An
+  // earlier build put eight physics topics on `lever`, so every Foundation
+  // physics mission opened on a torque rig whatever its equation was.
+  const perSubject = new Map();
+  for (const mission of curriculum) {
+    const counts = perSubject.get(mission.subject) ?? new Map();
+    counts.set(mission.lab, (counts.get(mission.lab) ?? 0) + 1);
+    perSubject.set(mission.subject, counts);
+  }
+  for (const [subject, counts] of perSubject) {
+    for (const [lab, count] of counts) {
+      if (count > 4) {
+        throw new Error(`${subject}: ${count} missions share the "${lab}" lab (limit 4).`);
+      }
     }
   }
 }

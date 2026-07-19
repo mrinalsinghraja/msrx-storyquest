@@ -38,7 +38,7 @@ const mathematics = [
   {
     slug: 'fractions',
     title: 'Fractions',
-    lab: 'data',
+    lab: 'fraction',
     formula: '\\frac{part}{whole}',
     scenario: 'a relief warehouse splitting 64 pallets between two districts',
     crisis: 'The larger district must receive 40 pallets. The fraction written on the dispatch order is wrong.',
@@ -55,7 +55,7 @@ const mathematics = [
   {
     slug: 'linear-equations',
     title: 'Linear equations',
-    lab: 'ratio',
+    lab: 'coordinate',
     formula: 'ax = c',
     scenario: 'a ferry loading ramp rated by axle weight',
     crisis: 'Each vehicle loads 4 tonnes onto the ramp. The ramp is certified to exactly 68 tonnes and the vehicle count is wrong.',
@@ -157,7 +157,7 @@ const mathematics = [
   {
     slug: 'triangle-properties',
     title: 'Triangle properties',
-    lab: 'geometry',
+    lab: 'triangle',
     formula: 'a^2 + b^2 = c^2',
     scenario: 'a radio mast held by a guy wire on a rocky slope',
     crisis: 'The anchor sits 9 m from the base and the wire is exactly 15 m long. The attachment height on the mast is wrong.',
@@ -174,7 +174,7 @@ const mathematics = [
   {
     slug: 'pythagorean-paths',
     title: 'Pythagorean paths',
-    lab: 'coordinate',
+    lab: 'triangle',
     formula: 'd^2 = x^2 + y^2',
     scenario: 'a supply run cutting diagonally across a flooded grid of streets',
     crisis: 'The depot is 20 blocks west. The vehicle has range for a 29 block diagonal, and the north leg is planned wrong.',
@@ -191,7 +191,7 @@ const mathematics = [
   {
     slug: 'circle-measures',
     title: 'Circle measures',
-    lab: 'geometry',
+    lab: 'circle',
     formula: 'C = 2\\pi r',
     scenario: 'a water tank being wrapped with a fixed length of insulation',
     crisis: 'There is exactly 44 m of insulating band. The tank radius on the order form is wrong, so the band will not meet.',
@@ -208,7 +208,7 @@ const mathematics = [
   {
     slug: 'golden-ratio',
     title: 'Golden ratio',
-    lab: 'ratio',
+    lab: 'area',
     formula: '\\varphi = \\frac{1+\\sqrt5}{2}',
     scenario: 'a museum frame being cut to the proportions of the painting inside',
     crisis: 'The long side is fixed at 16.18 cm. The short side is cut wrong, so the frame reads visibly off-balance.',
@@ -225,7 +225,7 @@ const mathematics = [
   {
     slug: 'transformations',
     title: 'Transformations',
-    lab: 'coordinate',
+    lab: 'numberline',
     formula: '(x, y) \\rightarrow (x + a, y + b)',
     scenario: 'a survey dataset logged against the wrong origin marker',
     crisis: 'Every point sits at -14 on the east axis but should read 23. The correction offset applied is wrong.',
@@ -242,7 +242,7 @@ const mathematics = [
   {
     slug: 'symmetry',
     title: 'Symmetry',
-    lab: 'geometry',
+    lab: 'mirror',
     formula: 'x\' = 2a - x',
     scenario: 'a stage lighting rig being mirrored to the opposite wing',
     crisis: 'A fixture sits at position 8. Its mirror must land at 26, and the mirror line is set wrong.',
@@ -259,7 +259,7 @@ const mathematics = [
   {
     slug: 'probability',
     title: 'Probability',
-    lab: 'data',
+    lab: 'probability',
     formula: 'P(A) = \\frac{favourable}{total}',
     scenario: 'a raffle for a community solar panel with a promised win rate',
     crisis: '40 tickets are in the drum. The organisers promised a 0.35 chance of drawing a winner, and the winning ticket count is wrong.',
@@ -310,7 +310,7 @@ const mathematics = [
   {
     slug: 'number-patterns',
     title: 'Number patterns',
-    lab: 'data',
+    lab: 'sequence',
     formula: 'a_n = a_1 + (n-1)d',
     scenario: 'a terraced planting scheme stepping down a hillside',
     crisis: 'The first terrace sits at 7 m elevation and the ninth must reach 63 m. The step between terraces is wrong.',
@@ -327,7 +327,7 @@ const mathematics = [
   {
     slug: 'negative-numbers',
     title: 'Negative numbers',
-    lab: 'coordinate',
+    lab: 'numberline',
     formula: 'a + x = b',
     scenario: 'a submersible logging depth against a shifting sea-level datum',
     crisis: 'The craft reads -23 m on the old datum and must read -8 m on the new one. The correction applied is wrong.',
@@ -344,7 +344,7 @@ const mathematics = [
   {
     slug: 'algebraic-balance',
     title: 'Algebraic balance',
-    lab: 'ratio',
+    lab: 'balance',
     formula: 'L = R',
     scenario: 'a budget reconciliation for a school science fund',
     crisis: 'Confirmed spending is 29 units against a 74 unit ledger total. The outstanding commitment is entered wrong.',
@@ -361,7 +361,7 @@ const mathematics = [
   {
     slug: 'inequalities',
     title: 'Inequalities',
-    lab: 'coordinate',
+    lab: 'numberline',
     formula: 'ax \\le c',
     scenario: 'a lift with a strict load limit in a hospital tower',
     crisis: 'Each crate weighs 4 units and the limit is 92 units. The boundary crate count is set wrong, so the alarm keeps firing.',
@@ -378,7 +378,7 @@ const mathematics = [
   {
     slug: 'area-and-perimeter',
     title: 'Area and perimeter',
-    lab: 'geometry',
+    lab: 'area',
     formula: 'A = lw',
     scenario: 'a tarpaulin being cut to cover a damaged grain store',
     crisis: 'The store needs 252 m² of cover and the tarp is 14 m along its fixed edge. The cut width is wrong.',
@@ -395,7 +395,7 @@ const mathematics = [
   {
     slug: 'volume-scaling',
     title: 'Volume scaling',
-    lab: 'geometry',
+    lab: 'volume',
     formula: 'V = A_{base} h',
     scenario: 'a rainwater cistern being sized for a rooftop garden',
     crisis: 'The cistern must hold 1080 L and its base area is fixed at 72 dm². The planned height is wrong.',

@@ -59,7 +59,7 @@ export default function MissionLobby({ curriculum, subjects }) {
             </p>
 
             <div className="mt-8 grid gap-3 sm:grid-cols-3">
-              {[['100', 'interactive missions'], ['16', 'visual lab systems'], ['4', 'STEM worlds']].map(([value, label]) => (
+              {[['100', 'interactive missions'], ['49', 'visual lab systems'], ['4', 'STEM worlds']].map(([value, label]) => (
                 <div key={label} className="rounded-2xl border border-[var(--border)] bg-white px-5 py-4 shadow-[var(--shadow-card)]">
                   <span className="text-2xl font-bold text-[var(--text-primary)]">{value}</span>
                   <span className="ml-2 text-[12px] font-medium uppercase tracking-[0.1em] text-[var(--text-tertiary)]">{label}</span>

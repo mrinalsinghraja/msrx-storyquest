@@ -21,7 +21,7 @@ const chemistry = [
   {
     slug: 'gas-compression',
     title: 'Gas compression',
-    lab: 'particle',
+    lab: 'gas',
     formula: 'PV = nRT',
     scenario: 'a diving cylinder being refilled at a coastal station',
     crisis: '0.5 mol of gas sits at 300 K and one atmosphere. The cylinder volume is set wrong, so the pressure gauge refuses to settle.',
@@ -38,7 +38,7 @@ const chemistry = [
   {
     slug: 'phase-changes',
     title: 'Phase changes',
-    lab: 'reaction',
+    lab: 'thermal',
     formula: 'Q = mL_v',
     scenario: 'a solar still producing drinking water on a stranded boat',
     crisis: 'The still can supply 904 kJ per cycle. Water needs 2260 kJ per kilogram to boil away, and the batch size is wrong.',
@@ -55,7 +55,7 @@ const chemistry = [
   {
     slug: 'thermal-expansion',
     title: 'Thermal expansion',
-    lab: 'reaction',
+    lab: 'thermal',
     formula: '\\Delta L = \\alpha L_0 \\Delta T',
     scenario: 'a 25 m steel footbridge installed on a hot afternoon',
     crisis: 'The expansion joint allows exactly 12 mm of growth. Steel expands 12 millionths of its length per kelvin, and the assumed temperature swing is wrong.',
@@ -123,7 +123,7 @@ const chemistry = [
   {
     slug: 'ionic-bonding',
     title: 'Ionic bonding',
-    lab: 'atom',
+    lab: 'bond',
     formula: '\\sum q_{+} + \\sum q_{-} = 0',
     scenario: 'a de-icing compound being mixed for an airfield',
     crisis: 'Each magnesium ion carries a 2+ charge. Chloride ions carry 1- each, and the ratio in the mix is wrong, so the compound will not crystallise.',
@@ -140,7 +140,7 @@ const chemistry = [
   {
     slug: 'covalent-bonding',
     title: 'Covalent bonding',
-    lab: 'atom',
+    lab: 'bond',
     formula: 'E_{total} = n E_{bond}',
     scenario: 'a fuel analysis rig measuring what a hydrocarbon releases',
     crisis: 'Breaking the sample apart takes 1392 kJ/mol. Each carbon-carbon bond costs 348 kJ/mol, and the assumed bond count is wrong.',
@@ -225,7 +225,7 @@ const chemistry = [
   {
     slug: 'solute-saturation',
     title: 'Solute saturation',
-    lab: 'particle',
+    lab: 'solution',
     formula: 'S = \\frac{m_{solute}}{m_{solution}}',
     scenario: 'a brine tank feeding an ice-road de-icing rig',
     crisis: 'The rig needs a solution that is 36% salt by mass. The batch holds 250 g of solution, and the salt mass is wrong.',
@@ -242,7 +242,7 @@ const chemistry = [
   {
     slug: 'solution-concentration',
     title: 'Solution concentration',
-    lab: 'particle',
+    lab: 'solution',
     formula: 'C = \\frac{n}{V}',
     scenario: 'a pharmacy diluting a stock solution for a paediatric dose',
     crisis: '0.6 mol of active compound must end up at 0.25 mol/L. The final volume is set wrong, and the dose would be unsafe.',
@@ -293,7 +293,7 @@ const chemistry = [
   {
     slug: 'oxidation',
     title: 'Oxidation',
-    lab: 'reaction',
+    lab: 'redox',
     formula: '\\mathrm{Ox}: e^- \\text{ lost}',
     scenario: 'a hull inspection finding rust below the waterline',
     crisis: 'The corrosion model only closes if the metal releases exactly 6 electrons per formula unit. The logged count is wrong.',
@@ -310,7 +310,7 @@ const chemistry = [
   {
     slug: 'reduction',
     title: 'Reduction',
-    lab: 'reaction',
+    lab: 'redox',
     formula: '\\mathrm{Red}: e^- \\text{ gained}',
     scenario: 'a silver recovery cell reclaiming metal from waste solution',
     crisis: 'Every electron lost on one side must be gained on the other. The cell expects 4 electrons per unit, and the count is wrong.',
@@ -344,7 +344,7 @@ const chemistry = [
   {
     slug: 'density-layers',
     title: 'Density layers',
-    lab: 'particle',
+    lab: 'solution',
     formula: '\\rho = \\frac{m}{V}',
     scenario: 'an oil spill response team predicting where a slick will sit',
     crisis: 'The sample weighs 240 g and must have a density of 0.8 g/mL to float on seawater. The measured volume is wrong.',
@@ -361,7 +361,7 @@ const chemistry = [
   {
     slug: 'separation-methods',
     title: 'Separation methods',
-    lab: 'ratio',
+    lab: 'chromatography',
     formula: 'R_f = \\frac{d_{solute}}{d_{solvent}}',
     scenario: 'a forensic lab matching ink from a disputed document',
     crisis: 'The reference dye has an R_f of 0.42. The solvent front travelled 8.5 cm, and the logged solute distance does not match.',
@@ -378,7 +378,7 @@ const chemistry = [
   {
     slug: 'molecular-polarity',
     title: 'Molecular polarity',
-    lab: 'atom',
+    lab: 'bond',
     formula: '\\mu = qr',
     scenario: 'a membrane filter that lets the wrong molecules through',
     crisis: 'The filter blocks anything with a dipole moment above 1.85 D. The modelled charge separation is wrong, so the prediction is useless.',
@@ -395,7 +395,7 @@ const chemistry = [
   {
     slug: 'heat-of-reaction',
     title: 'Heat of reaction',
-    lab: 'reaction',
+    lab: 'thermal',
     formula: '\\Delta H = \\frac{q}{n}',
     scenario: 'a calorimeter checking a new hand-warmer formula',
     crisis: 'The run released 57 kJ. The formula is rated at 38 kJ per mole, and the assumed amount of reactant is wrong.',

@@ -136,7 +136,9 @@ function ReactionLab({ value, target, accent, arrowId, controlText, leftText }) 
       <text x="165" y="302" fill="#6e6e73" fontSize="11" fontWeight="700" textAnchor="middle">REACTANTS</text>
       <text x="475" y="302" fill="#6e6e73" fontSize="11" fontWeight="700" textAnchor="middle">PRODUCTS</text>
       <text x="320" y={peak - 12} fill={accent} fontSize="11" fontWeight="700" textAnchor="middle">ACTIVATION PATH</text>
-      <text x="320" y="91" fill={Math.abs(value - target) <= 4 ? accent : '#6e6e73'} fontSize="16" fontWeight="700" textAnchor="middle">{controlText}</text>
+      {/* Sits below the curve: the activation label rides the peak, so a fixed
+          readout near the top collides with it at mid-range values. */}
+      <text x="320" y="332" fill={Math.abs(value - target) <= 4 ? accent : '#6e6e73'} fontSize="16" fontWeight="700" textAnchor="middle">{controlText}</text>
     </>
   );
 }
@@ -220,8 +222,10 @@ function GeometryLab({ value, accent, controlText, leftText }) {
       <path d={`M260 240A60 60 0 0 1 ${point((-angle * Math.PI) / 180, 60, 320, 240)}`} fill="none" stroke="#f59e0b" strokeWidth="4" />
       <circle cx="320" cy="240" r="10" fill="#1d1d1f" />
       <path d="M162 116H478V294H162Z" fill="none" stroke="#d1d1d6" strokeDasharray="5 7" />
-      <text x="320" y="160" fill={accent} fontSize="30" fontWeight="700" textAnchor="middle">{Math.round(angle)}°</text>
-      <text x="320" y="318" fill="#6e6e73" fontSize="11" fontWeight="700" textAnchor="middle">INTERIOR ANGLE LOCK</text>
+      {/* Both rays sweep the space above the vertex, so the readout lives below
+          it — anywhere above collides with the moving ray at some angle. */}
+      <text x="320" y="300" fill={accent} fontSize="28" fontWeight="700" textAnchor="middle">{Math.round(angle)}°</text>
+      <text x="320" y="330" fill="#6e6e73" fontSize="11" fontWeight="700" textAnchor="middle">INTERIOR ANGLE LOCK</text>
     </>
   );
 }
@@ -249,7 +253,8 @@ function CellLab({ value, accent, arrowId, controlText, leftText }) {
       <circle cx="350" cy="185" r={shield} fill="none" stroke={accent} strokeWidth="5" strokeDasharray="8 6" />
       <circle cx="350" cy="185" r="36" fill="#8b5cf6" />
       <circle cx="350" cy="185" r="13" fill="#ede9fe" />
-      {[{ x: 142, y: 132 }, { x: 148, y: 224 }, { x: 214, y: 182 }].map((virus, index) => <g key={index}><circle cx={virus.x} cy={virus.y} r="14" fill="#db2777" /><path d={`M${virus.x - 20} ${virus.y}H${virus.x + 20}M${virus.x} ${virus.y - 20}V${virus.x} ${virus.y + 20}`} stroke="#f472b6" strokeWidth="3" /></g>)}
+      {[{ x: 142, y: 132 }, { x: 148, y: 224 }, { x: 214, y: 182 }].map((virus, index) => <g key={index}><circle cx={virus.x} cy={virus.y} r="14" fill="#db2777" />{/* V takes a single y. Passing "x y" made the spikes render as a stray bar. */}
+<path d={`M${virus.x - 20} ${virus.y}H${virus.x + 20}M${virus.x} ${virus.y - 20}V${virus.y + 20}`} stroke="#f472b6" strokeWidth="3" /></g>)}
       <line x1="232" y1="182" x2="286" y2="182" stroke={accent} strokeWidth="4" markerEnd={`url(#${arrowId})`} />
       <text x="350" y="325" fill={accent} fontSize="14" fontWeight="700" textAnchor="middle">{controlText}</text>
     </>
@@ -312,26 +317,713 @@ function OsmosisLab({ value, accent, arrowId, controlText, leftText }) {
   );
 }
 
-function LabScene({ kind, value, target, accent, arrowId, leftLabel, rightLabel, controlText, leftText, leftValue }) {
-  switch (kind) {
-    case 'circuit': return <CircuitLab value={value} target={target} accent={accent} arrowId={arrowId} leftLabel={leftLabel} rightLabel={rightLabel} controlText={controlText} leftText={leftText} />;
-    case 'lens': return <LensLab value={value} target={target} accent={accent} arrowId={arrowId} controlText={controlText} leftText={leftText} />;
-    case 'wave': return <WaveLab value={value} target={target} accent={accent} controlText={controlText} leftText={leftText} />;
-    case 'particle': return <ParticleLab value={value} accent={accent} controlText={controlText} leftText={leftText} />;
-    case 'reaction': return <ReactionLab value={value} target={target} accent={accent} arrowId={arrowId} controlText={controlText} leftText={leftText} />;
-    case 'ph': return <PhLab value={value} accent={accent} gradientId={`${arrowId}-ph`} controlText={controlText} leftText={leftText} leftValue={leftValue} />;
-    case 'atom': return <AtomLab value={value} accent={accent} controlText={controlText} leftText={leftText} />;
-    case 'ratio': return <RatioLab value={value} target={target} accent={accent} controlText={controlText} leftText={leftText} />;
-    case 'coordinate': return <CoordinateLab value={value} accent={accent} controlText={controlText} leftText={leftText} />;
-    case 'geometry': return <GeometryLab value={value} accent={accent} controlText={controlText} leftText={leftText} />;
-    case 'data': return <DataLab value={value} target={target} accent={accent} controlText={controlText} leftText={leftText} />;
-    case 'cell': return <CellLab value={value} accent={accent} arrowId={arrowId} controlText={controlText} leftText={leftText} />;
-    case 'ecosystem': return <EcosystemLab value={value} accent={accent} arrowId={arrowId} controlText={controlText} leftText={leftText} />;
-    case 'lungs': return <LungsLab value={value} accent={accent} controlText={controlText} leftText={leftText} />;
-    case 'osmosis': return <OsmosisLab value={value} accent={accent} arrowId={arrowId} controlText={controlText} leftText={leftText} />;
-    case 'lever':
-    default: return <LeverLab value={value} target={target} accent={accent} arrowId={arrowId} leftLabel={leftLabel} rightLabel={rightLabel} controlText={controlText} leftText={leftText} />;
-  }
+function FrictionLab({ value, accent, arrowId, leftLabel, rightLabel, controlText }) {
+  const grip = 30 + value * 0.42;
+  return (
+    <>
+      <path d="M86 268H554" stroke="#a1a1a6" strokeWidth="3" />
+      {Array.from({ length: 24 }, (_, index) => <path key={index} d={`M${92 + index * 19} 268l-9 12`} stroke="#c7c7cc" strokeWidth="2" />)}
+      <rect x="238" y="176" width="150" height="92" rx="10" fill="#8b5cf6" />
+      <text x="313" y="228" fill="#ffffff" fontSize="12" fontWeight="800" textAnchor="middle">LOAD</text>
+      <line x1="313" y1="120" x2="313" y2="170" stroke="#8b5cf6" strokeWidth="5" markerEnd={`url(#${arrowId})`} />
+      <text x="313" y="112" fill="#6e6e73" fontSize="10" fontWeight="700" textAnchor="middle">NORMAL FORCE</text>
+      <line x1="238" y1="222" x2={238 - grip} y2="222" stroke={accent} strokeWidth="6" markerEnd={`url(#${arrowId})`} />
+      <line x1="388" y1="222" x2={388 + 62} y2="222" stroke="#d1d1d6" strokeWidth="6" markerEnd={`url(#${arrowId})`} />
+      <text x="150" y="204" fill={accent} fontSize="10" fontWeight="700" textAnchor="middle">{leftLabel}</text>
+      <text x="470" y="204" fill="#6e6e73" fontSize="10" fontWeight="700" textAnchor="middle">{rightLabel}</text>
+      <text x="320" y="316" fill={accent} fontSize="15" fontWeight="700" textAnchor="middle">{controlText}</text>
+    </>
+  );
+}
+
+function ForceLab({ value, accent, arrowId, leftLabel, rightLabel, controlText }) {
+  const thrust = 24 + value * 1.5;
+  return (
+    <>
+      <path d="M96 272H544" stroke="#c7c7cc" strokeWidth="3" />
+      <rect x="248" y="164" width="146" height="86" rx="12" fill="#ede9fe" stroke="#8b5cf6" strokeWidth="3" />
+      <text x="321" y="214" fill="#8b5cf6" fontSize="13" fontWeight="800" textAnchor="middle">MASS</text>
+      <circle cx="284" cy="258" r="18" fill="#1d1d1f" /><circle cx="358" cy="258" r="18" fill="#1d1d1f" />
+      <circle cx="284" cy="258" r="6" fill="#ffffff" /><circle cx="358" cy="258" r="6" fill="#ffffff" />
+      <line x1="394" y1="196" x2={394 + thrust} y2="196" stroke={accent} strokeWidth="7" markerEnd={`url(#${arrowId})`} />
+      <line x1="248" y1="228" x2="182" y2="228" stroke="#a1a1a6" strokeWidth="5" markerEnd={`url(#${arrowId})`} />
+      <text x="470" y="176" fill={accent} fontSize="10" fontWeight="700" textAnchor="middle">{leftLabel}</text>
+      <text x="180" y="210" fill="#6e6e73" fontSize="10" fontWeight="700" textAnchor="middle">{rightLabel}</text>
+      <text x="320" y="316" fill={accent} fontSize="15" fontWeight="700" textAnchor="middle">{controlText}</text>
+    </>
+  );
+}
+
+function CollisionLab({ value, accent, arrowId, leftLabel, rightLabel, controlText }) {
+  const approach = 128 + value * 0.92;
+  return (
+    <>
+      <path d="M76 268H564" stroke="#c7c7cc" strokeWidth="3" />
+      <rect x={approach} y="196" width="96" height="60" rx="10" fill="#8b5cf6" />
+      <circle cx={approach + 24} cy="262" r="12" fill="#1d1d1f" /><circle cx={approach + 72} cy="262" r="12" fill="#1d1d1f" />
+      <line x1={approach + 100} y1="180" x2={approach + 100 + value * 0.7 + 18} y2="180" stroke={accent} strokeWidth="6" markerEnd={`url(#${arrowId})`} />
+      <rect x="428" y="196" width="96" height="60" rx="10" fill="#e5e5ea" stroke="#a1a1a6" strokeWidth="3" />
+      <circle cx="452" cy="262" r="12" fill="#1d1d1f" /><circle cx="500" cy="262" r="12" fill="#1d1d1f" />
+      <path d="M414 186V266" stroke={accent} strokeWidth="3" strokeDasharray="6 6" />
+      <text x="176" y="180" fill="#8b5cf6" fontSize="10" fontWeight="700">{leftLabel}</text>
+      <text x="476" y="180" fill="#6e6e73" fontSize="10" fontWeight="700" textAnchor="middle">{rightLabel}</text>
+      <text x="320" y="316" fill={accent} fontSize="15" fontWeight="700" textAnchor="middle">{controlText}</text>
+    </>
+  );
+}
+
+function EnergyLab({ value, accent, leftLabel, rightLabel, controlText }) {
+  const kinetic = clamp(value, 0, 100) * 3.9;
+  return (
+    <>
+      <rect x="118" y="132" width="404" height="46" rx="10" fill="#f5f5f7" stroke="#d1d1d6" strokeWidth="2" />
+      <rect x="118" y="132" width={kinetic} height="46" rx="10" fill={accent} />
+      <rect x="118" y="204" width="404" height="46" rx="10" fill="#f5f5f7" stroke="#d1d1d6" strokeWidth="2" />
+      <rect x={522 - (404 - kinetic)} y="204" width={404 - kinetic} height="46" rx="10" fill="#8b5cf6" />
+      <text x="118" y="124" fill={accent} fontSize="11" fontWeight="700">{leftLabel}</text>
+      <text x="118" y="196" fill="#8b5cf6" fontSize="11" fontWeight="700">{rightLabel}</text>
+      <path d="M118 274H522" stroke="#1d1d1f" strokeWidth="3" />
+      <text x="320" y="300" fill="#6e6e73" fontSize="10" fontWeight="700" textAnchor="middle">TOTAL ENERGY IS FIXED — THE SPLIT IS NOT</text>
+      <text x="320" y="326" fill={accent} fontSize="15" fontWeight="700" textAnchor="middle">{controlText}</text>
+    </>
+  );
+}
+
+function ProjectileLab({ value, accent, controlText, leftText }) {
+  const range = 90 + (value / 100) ** 2 * 380;
+  const apex = 262 - range * 0.28;
+  return (
+    <>
+      <path d="M86 262H562" stroke="#a1a1a6" strokeWidth="3" />
+      <path d={`M104 262Q${104 + range / 2} ${apex} ${104 + range} 262`} fill="none" stroke={accent} strokeWidth="4" strokeDasharray="7 6" />
+      <path d="M84 262L104 240L124 262Z" fill="#8b5cf6" />
+      <circle cx={104 + range} cy="262" r="9" fill={accent} />
+      <line x1={104 + range} y1="262" x2={104 + range} y2="290" stroke={accent} strokeWidth="2" />
+      <line x1="104" y1="290" x2={104 + range} y2="290" stroke="#8b5cf6" strokeWidth="2" markerEnd="none" />
+      <text x={104 + range / 2} y="310" fill="#8b5cf6" fontSize="11" fontWeight="700" textAnchor="middle">RANGE {leftText}</text>
+      <text x="320" y="112" fill={accent} fontSize="15" fontWeight="700" textAnchor="middle">{controlText}</text>
+    </>
+  );
+}
+
+function OrbitLab({ value, accent, controlText, leftText }) {
+  const radius = 44 + value * 0.92;
+  const angle = -0.7;
+  return (
+    <>
+      <circle cx="320" cy="192" r="30" fill="#8b5cf6" />
+      <circle cx="320" cy="192" r={radius} fill="none" stroke={accent} strokeWidth="3" strokeDasharray="8 7" />
+      <circle cx={320 + Math.cos(angle) * radius} cy={192 + Math.sin(angle) * radius} r="12" fill={accent} />
+      <line x1="320" y1="192" x2={320 + radius} y2="192" stroke="#a1a1a6" strokeWidth="2" />
+      <text x={320 + radius / 2} y="184" fill="#6e6e73" fontSize="10" fontWeight="700" textAnchor="middle">r</text>
+      <text x="320" y="330" fill={accent} fontSize="15" fontWeight="700" textAnchor="middle">{controlText}</text>
+      <text x="320" y="306" fill="#6e6e73" fontSize="10" fontWeight="700" textAnchor="middle">FIELD STRENGTH {leftText}</text>
+    </>
+  );
+}
+
+function HydraulicLab({ value, accent, leftLabel, rightLabel, controlText }) {
+  // A small input piston drops as the wide output piston rises: fluid is
+  // conserved, so both pistons must ride on the fluid surface rather than
+  // float above their own cylinders.
+  const lift = clamp(value, 0, 100) * 0.62;
+  const outputTop = 250 - lift;
+  const inputTop = 152 + lift * 0.55;
+  return (
+    <>
+      <path d={`M120 300V${inputTop}h86v${296 - inputTop}`} fill="none" stroke="#a1a1a6" strokeWidth="3" />
+      <path d={`M392 300V${outputTop - 26}h150v${326 - outputTop}`} fill="none" stroke="#a1a1a6" strokeWidth="3" />
+      <path d={`M124 300h78v-${300 - inputTop - 12}h-78Z`} fill="#cffafe" />
+      <rect x="396" y={outputTop} width="142" height={300 - outputTop} fill="#cffafe" />
+      <rect x="124" y="270" width="414" height="30" fill="#cffafe" />
+      <rect x="124" y={inputTop} width="78" height="16" rx="4" fill="#8b5cf6" />
+      <rect x="396" y={outputTop - 16} width="142" height="16" rx="4" fill={accent} />
+      <line x1="163" y1={inputTop} x2="163" y2={inputTop - 42} stroke="#8b5cf6" strokeWidth="5" />
+      <text x="163" y={inputTop - 52} fill="#8b5cf6" fontSize="10" fontWeight="700" textAnchor="middle">{rightLabel}</text>
+      <text x="467" y={outputTop - 28} fill={accent} fontSize="10" fontWeight="700" textAnchor="middle">{leftLabel}</text>
+      <text x="300" y="330" fill={accent} fontSize="15" fontWeight="700" textAnchor="middle">{controlText}</text>
+    </>
+  );
+}
+
+function ThermalLab({ value, accent, arrowId, leftLabel, rightLabel, controlText, leftText }) {
+  // Capped at 6: past that the arrowheads merge into one solid band and stop
+  // reading as discrete heat flow.
+  const flow = Math.min(6, 2 + Math.round(value / 22));
+  return (
+    <>
+      <rect x="96" y="132" width="128" height="140" rx="16" fill="#fee2e2" stroke="#ef4444" strokeWidth="3" />
+      <rect x="416" y="132" width="128" height="140" rx="16" fill="#e0f2fe" stroke={accent} strokeWidth="3" />
+      <rect x="224" y="178" width="192" height="48" fill="#e5e5ea" stroke="#a1a1a6" strokeWidth="2" />
+      {Array.from({ length: flow }, (_, index) => (
+        <line key={index} x1={238 + index * 29} y1="202" x2={252 + index * 29} y2="202" stroke="#ef4444" strokeWidth="4" markerEnd={`url(#${arrowId})`} />
+      ))}
+      <text x="160" y="120" fill="#ef4444" fontSize="10" fontWeight="700" textAnchor="middle">{leftLabel}</text>
+      <text x="480" y="120" fill={accent} fontSize="10" fontWeight="700" textAnchor="middle">{rightLabel}</text>
+      <text x="320" y="164" fill="#6e6e73" fontSize="10" fontWeight="700" textAnchor="middle">CONDUCTING BRIDGE</text>
+      <text x="320" y="296" fill={accent} fontSize="15" fontWeight="700" textAnchor="middle">{controlText}</text>
+      <text x="320" y="322" fill="#6e6e73" fontSize="11" fontWeight="700" textAnchor="middle">{leftText}</text>
+    </>
+  );
+}
+
+function MagnetLab({ value, accent, arrowId, leftLabel, controlText }) {
+  const turns = Math.max(3, Math.round(value / 7));
+  return (
+    <>
+      <rect x="232" y="146" width="176" height="76" rx="8" fill="#e5e5ea" stroke="#a1a1a6" strokeWidth="3" />
+      {Array.from({ length: turns }, (_, index) => (
+        <ellipse key={index} cx={244 + index * (152 / Math.max(1, turns - 1))} cy="184" rx="9" ry="46" fill="none" stroke={accent} strokeWidth="4" />
+      ))}
+      {[126, 242].map((y, index) => (
+        <path key={y} d={`M150 ${y}Q320 ${index ? y + 62 : y - 62} 490 ${y}`} fill="none" stroke="#8b5cf6" strokeWidth="3" strokeDasharray="7 6" markerEnd={`url(#${arrowId})`} />
+      ))}
+      <path d="M120 184H210" stroke="#8b5cf6" strokeWidth="4" markerEnd={`url(#${arrowId})`} />
+      <text x="320" y="106" fill="#8b5cf6" fontSize="10" fontWeight="700" textAnchor="middle">{leftLabel}</text>
+      <text x="320" y="300" fill={accent} fontSize="15" fontWeight="700" textAnchor="middle">{controlText}</text>
+      <text x="320" y="324" fill="#6e6e73" fontSize="10" fontWeight="700" textAnchor="middle">{turns} TURNS SHOWN</text>
+    </>
+  );
+}
+
+function MirrorLab({ value, accent, controlText }) {
+  const theta = (clamp(value, 0, 100) / 100) * 80;
+  const radians = (theta * Math.PI) / 180;
+  const reach = 150;
+  return (
+    <>
+      <path d="M120 254H520" stroke="#1d1d1f" strokeWidth="5" />
+      {Array.from({ length: 20 }, (_, index) => <path key={index} d={`M${126 + index * 20} 254l-10 14`} stroke="#a1a1a6" strokeWidth="2" />)}
+      <line x1="320" y1="254" x2="320" y2="112" stroke="#a1a1a6" strokeWidth="2" strokeDasharray="6 6" />
+      <line x1={320 - Math.sin(radians) * reach} y1={254 - Math.cos(radians) * reach} x2="320" y2="254" stroke="#8b5cf6" strokeWidth="4" />
+      <line x1="320" y1="254" x2={320 + Math.sin(radians) * reach} y2={254 - Math.cos(radians) * reach} stroke={accent} strokeWidth="4" />
+      <circle cx="320" cy="254" r="7" fill="#1d1d1f" />
+      <text x={320 - Math.sin(radians) * reach - 6} y={248 - Math.cos(radians) * reach} fill="#8b5cf6" fontSize="10" fontWeight="700" textAnchor="end">INCIDENT</text>
+      <text x={320 + Math.sin(radians) * reach + 6} y={248 - Math.cos(radians) * reach} fill={accent} fontSize="10" fontWeight="700">REFLECTED</text>
+      <text x="320" y="300" fill={accent} fontSize="15" fontWeight="700" textAnchor="middle">{controlText}</text>
+    </>
+  );
+}
+
+function GasLab({ value, accent, arrowId, leftLabel, rightLabel, controlText, leftText }) {
+  const height = 40 + value * 1.5;
+  return (
+    <>
+      <rect x="196" y="96" width="176" height="196" rx="10" fill="#ffffff" stroke="#a1a1a6" strokeWidth="4" />
+      <rect x="202" y={292 - height} width="164" height={height} fill="#cffafe" fillOpacity="0.8" />
+      <rect x="196" y={286 - height} width="176" height="14" rx="4" fill="#8b5cf6" />
+      <line x1="284" y1={280 - height} x2="284" y2="112" stroke="#8b5cf6" strokeWidth="6" />
+      <line x1="284" y1="112" x2="284" y2="148" stroke="#8b5cf6" strokeWidth="6" markerEnd={`url(#${arrowId})`} />
+      {Array.from({ length: 12 }, (_, index) => (
+        <circle key={index} cx={214 + ((index * 43) % 140)} cy={292 - ((index * 29) % Math.max(20, height - 12)) - 8} r="4" fill={accent} />
+      ))}
+      <circle cx="452" cy="176" r="52" fill="#f5f5f7" stroke="#a1a1a6" strokeWidth="3" />
+      <line x1="452" y1="176" x2={452 + Math.cos((value / 100) * Math.PI - Math.PI) * 38} y2={176 + Math.sin((value / 100) * Math.PI - Math.PI) * 38} stroke="#ef4444" strokeWidth="4" />
+      <circle cx="452" cy="176" r="6" fill="#1d1d1f" />
+      <text x="452" y="248" fill="#6e6e73" fontSize="10" fontWeight="700" textAnchor="middle">{rightLabel}</text>
+      <text x="452" y="268" fill={accent} fontSize="12" fontWeight="700" textAnchor="middle">{leftText}</text>
+      <text x="284" y="322" fill={accent} fontSize="14" fontWeight="700" textAnchor="middle">{controlText}</text>
+      <text x="284" y="90" fill="#6e6e73" fontSize="10" fontWeight="700" textAnchor="middle">{leftLabel}</text>
+    </>
+  );
+}
+
+function BondLab({ value, accent, controlText, leftText }) {
+  const bonds = Math.max(1, Math.min(4, Math.round(value / 25) || 1));
+  return (
+    <>
+      <circle cx="212" cy="188" r="52" fill="#8b5cf6" />
+      <circle cx="428" cy="188" r="52" fill={accent} />
+      {Array.from({ length: bonds }, (_, index) => (
+        <line key={index} x1="264" y1={188 - (bonds - 1) * 9 + index * 18} x2="376" y2={188 - (bonds - 1) * 9 + index * 18} stroke="#1d1d1f" strokeWidth="6" strokeLinecap="round" />
+      ))}
+      <text x="212" y="194" fill="#ffffff" fontSize="14" fontWeight="800" textAnchor="middle">A</text>
+      <text x="428" y="194" fill="#ffffff" fontSize="14" fontWeight="800" textAnchor="middle">B</text>
+      <text x="320" y="286" fill="#6e6e73" fontSize="10" fontWeight="700" textAnchor="middle">SHARED PAIRS: {bonds}</text>
+      <text x="320" y="312" fill={accent} fontSize="15" fontWeight="700" textAnchor="middle">{controlText}</text>
+      <text x="320" y="112" fill="#6e6e73" fontSize="11" fontWeight="700" textAnchor="middle">{leftText}</text>
+    </>
+  );
+}
+
+function SolutionLab({ value, accent, leftLabel, rightLabel, controlText, leftText }) {
+  const level = 60 + value * 1.5;
+  const solutes = Math.max(2, Math.round(value / 6));
+  return (
+    <>
+      <path d="M212 96V276a22 22 0 0 0 22 22h172a22 22 0 0 0 22-22V96" fill="#ffffff" stroke="#a1a1a6" strokeWidth="4" />
+      <path d={`M214 ${298 - level}h212V276a20 20 0 0 1-20 20H234a20 20 0 0 1-20-20Z`} fill="#cffafe" fillOpacity="0.9" />
+      <rect x="214" y={298 - level} width="212" height={Math.max(0, level - 24)} fill="#cffafe" fillOpacity="0.9" />
+      {Array.from({ length: solutes }, (_, index) => (
+        <circle key={index} cx={230 + ((index * 37) % 180)} cy={294 - ((index * 53) % Math.max(24, level - 16))} r="5" fill={accent} />
+      ))}
+      <line x1="446" y1={298 - level} x2="492" y2={298 - level} stroke="#8b5cf6" strokeWidth="3" strokeDasharray="6 5" />
+      <text x="498" y={302 - level} fill="#8b5cf6" fontSize="10" fontWeight="700">{rightLabel}</text>
+      <text x="320" y="90" fill="#6e6e73" fontSize="10" fontWeight="700" textAnchor="middle">{leftLabel}</text>
+      <text x="320" y="330" fill={accent} fontSize="14" fontWeight="700" textAnchor="middle">{controlText} · {leftText}</text>
+    </>
+  );
+}
+
+function RedoxLab({ value, accent, arrowId, leftLabel, rightLabel, controlText }) {
+  const electrons = Math.max(1, Math.round(value / 12));
+  return (
+    <>
+      <rect x="112" y="140" width="128" height="150" rx="10" fill="#faf5ff" stroke="#8b5cf6" strokeWidth="3" />
+      <rect x="400" y="140" width="128" height="150" rx="10" fill="#ecfeff" stroke={accent} strokeWidth="3" />
+      <rect x="168" y="112" width="16" height="120" rx="4" fill="#8b5cf6" />
+      <rect x="456" y="112" width="16" height="120" rx="4" fill={accent} />
+      <path d="M176 112V92H464V112" fill="none" stroke="#1d1d1f" strokeWidth="4" />
+      {Array.from({ length: Math.min(8, electrons) }, (_, index) => (
+        <circle key={index} cx={196 + index * 34} cy="92" r="7" fill="#f59e0b" />
+      ))}
+      <line x1="300" y1="92" x2="352" y2="92" stroke="#f59e0b" strokeWidth="4" markerEnd={`url(#${arrowId})`} />
+      <text x="176" y="312" fill="#8b5cf6" fontSize="10" fontWeight="700" textAnchor="middle">{leftLabel}</text>
+      <text x="464" y="312" fill={accent} fontSize="10" fontWeight="700" textAnchor="middle">{rightLabel}</text>
+      <text x="320" y="216" fill={accent} fontSize="15" fontWeight="700" textAnchor="middle">{controlText}</text>
+      <text x="320" y="70" fill="#6e6e73" fontSize="10" fontWeight="700" textAnchor="middle">ELECTRON FLOW</text>
+    </>
+  );
+}
+
+function ChromatographyLab({ value, accent, leftLabel, rightLabel, controlText, leftText }) {
+  const travel = clamp(value, 0, 100) * 1.6;
+  return (
+    <>
+      <rect x="252" y="92" width="136" height="212" rx="6" fill="#ffffff" stroke="#a1a1a6" strokeWidth="3" />
+      <line x1="252" y1="284" x2="388" y2="284" stroke="#6e6e73" strokeWidth="2" strokeDasharray="5 4" />
+      <line x1="252" y1="112" x2="388" y2="112" stroke="#8b5cf6" strokeWidth="3" />
+      <ellipse cx="320" cy={284 - travel} rx="24" ry="13" fill={accent} opacity="0.85" />
+      <ellipse cx="320" cy="284" rx="18" ry="9" fill="#d1d1d6" />
+      <line x1="410" y1="284" x2="410" y2={284 - travel} stroke={accent} strokeWidth="2" />
+      <text x="420" y={288 - travel / 2} fill={accent} fontSize="10" fontWeight="700">{leftText}</text>
+      <text x="240" y="116" fill="#8b5cf6" fontSize="10" fontWeight="700" textAnchor="end">{rightLabel}</text>
+      <text x="240" y="288" fill="#6e6e73" fontSize="10" fontWeight="700" textAnchor="end">{leftLabel}</text>
+      <text x="320" y="330" fill={accent} fontSize="14" fontWeight="700" textAnchor="middle">{controlText}</text>
+    </>
+  );
+}
+
+function FractionLab({ value, accent, controlText, leftText }) {
+  const fraction = clamp(value, 0, 100) / 100;
+  const angle = fraction * Math.PI * 2 - Math.PI / 2;
+  const large = fraction > 0.5 ? 1 : 0;
+  const slice = fraction >= 0.999
+    ? 'M320 84A94 94 0 1 1 319.9 84Z'
+    : `M320 178L320 84A94 94 0 ${large} 1 ${(320 + Math.cos(angle) * 94).toFixed(1)} ${(178 + Math.sin(angle) * 94).toFixed(1)}Z`;
+  return (
+    <>
+      <circle cx="320" cy="178" r="94" fill="#f5f5f7" stroke="#d1d1d6" strokeWidth="3" />
+      <path d={slice} fill={accent} opacity="0.9" />
+      {Array.from({ length: 8 }, (_, index) => {
+        const tick = (index / 8) * Math.PI * 2 - Math.PI / 2;
+        return <line key={index} x1={320 + Math.cos(tick) * 84} y1={178 + Math.sin(tick) * 84} x2={320 + Math.cos(tick) * 94} y2={178 + Math.sin(tick) * 94} stroke="#a1a1a6" strokeWidth="2" />;
+      })}
+      <text x="320" y="304" fill={accent} fontSize="16" fontWeight="700" textAnchor="middle">{controlText}</text>
+      <text x="320" y="328" fill="#6e6e73" fontSize="11" fontWeight="700" textAnchor="middle">{leftText}</text>
+    </>
+  );
+}
+
+function TriangleLab({ value, accent, leftLabel, controlText, leftText }) {
+  const rise = 30 + clamp(value, 0, 100) * 1.7;
+  const baseY = 288;
+  return (
+    <>
+      <path d={`M156 ${baseY}H436V${baseY - rise}Z`} fill="#ede9fe" stroke="#8b5cf6" strokeWidth="3" />
+      <path d={`M436 ${baseY}h-26v-26h26`} fill="none" stroke="#a1a1a6" strokeWidth="2" />
+      <line x1="436" y1={baseY} x2="436" y2={baseY - rise} stroke={accent} strokeWidth="5" />
+      <line x1="156" y1={baseY} x2="436" y2={baseY - rise} stroke="#8b5cf6" strokeWidth="5" />
+      <text x="296" y={baseY + 22} fill="#6e6e73" fontSize="11" fontWeight="700" textAnchor="middle">BASE</text>
+      <text x="452" y={baseY - rise / 2} fill={accent} fontSize="11" fontWeight="700">{leftLabel}</text>
+      <text x="270" y={baseY - rise / 2 - 12} fill="#8b5cf6" fontSize="11" fontWeight="700" textAnchor="middle">{leftText}</text>
+      <text x="320" y="112" fill={accent} fontSize="15" fontWeight="700" textAnchor="middle">{controlText}</text>
+    </>
+  );
+}
+
+function CircleLab({ value, accent, controlText, leftText }) {
+  const radius = 26 + clamp(value, 0, 100) * 0.98;
+  return (
+    <>
+      <circle cx="320" cy="188" r={radius} fill="#e0f2fe" fillOpacity="0.7" stroke={accent} strokeWidth="4" />
+      <line x1="320" y1="188" x2={320 + radius} y2="188" stroke="#8b5cf6" strokeWidth="4" />
+      <circle cx="320" cy="188" r="6" fill="#1d1d1f" />
+      <text x={320 + radius / 2} y="180" fill="#8b5cf6" fontSize="11" fontWeight="700" textAnchor="middle">r</text>
+      <text x="320" y="316" fill={accent} fontSize="15" fontWeight="700" textAnchor="middle">{controlText}</text>
+      <text x="320" y="338" fill="#6e6e73" fontSize="11" fontWeight="700" textAnchor="middle">{leftText}</text>
+    </>
+  );
+}
+
+function AreaLab({ value, accent, leftLabel, controlText, leftText }) {
+  const width = 60 + clamp(value, 0, 100) * 3.1;
+  return (
+    <>
+      <rect x="120" y="132" width={width} height="140" rx="4" fill="#e0f2fe" fillOpacity="0.75" stroke={accent} strokeWidth="4" />
+      {Array.from({ length: 7 }, (_, index) => <line key={index} x1="120" y1={146 + index * 20} x2={120 + width} y2={146 + index * 20} stroke={accent} strokeWidth="1" opacity="0.35" />)}
+      <line x1="120" y1="292" x2={120 + width} y2="292" stroke="#8b5cf6" strokeWidth="3" />
+      <line x1="104" y1="132" x2="104" y2="272" stroke="#a1a1a6" strokeWidth="3" />
+      <text x={120 + width / 2} y="312" fill="#8b5cf6" fontSize="11" fontWeight="700" textAnchor="middle">{leftLabel}</text>
+      <text x="86" y="206" fill="#6e6e73" fontSize="11" fontWeight="700" textAnchor="end">HEIGHT</text>
+      <text x="320" y="112" fill={accent} fontSize="15" fontWeight="700" textAnchor="middle">{controlText} · {leftText}</text>
+    </>
+  );
+}
+
+function VolumeLab({ value, accent, controlText, leftText }) {
+  const height = 34 + clamp(value, 0, 100) * 1.6;
+  const top = 292 - height;
+  return (
+    <>
+      <path d={`M198 292V${top}l52-40h180v${height}l-52 40Z`} fill="#e0f2fe" fillOpacity="0.55" stroke={accent} strokeWidth="3" />
+      <path d={`M198 ${top}h180v${height}`} fill="none" stroke={accent} strokeWidth="3" />
+      <path d={`M378 ${top}l52-40`} stroke={accent} strokeWidth="3" />
+      <rect x="198" y={top} width="180" height={height} fill={accent} fillOpacity="0.22" />
+      <line x1="182" y1="292" x2="182" y2={top} stroke="#8b5cf6" strokeWidth="3" />
+      <text x="168" y={top + height / 2} fill="#8b5cf6" fontSize="11" fontWeight="700" textAnchor="end">h</text>
+      <text x="320" y="322" fill={accent} fontSize="15" fontWeight="700" textAnchor="middle">{controlText}</text>
+      <text x="320" y="112" fill="#6e6e73" fontSize="11" fontWeight="700" textAnchor="middle">{leftText}</text>
+    </>
+  );
+}
+
+function NumberLineLab({ value, accent, controlText, leftText }) {
+  const x = 104 + clamp(value, 0, 100) * 4.32;
+  return (
+    <>
+      <line x1="104" y1="196" x2="536" y2="196" stroke="#1d1d1f" strokeWidth="3" />
+      {Array.from({ length: 11 }, (_, index) => {
+        const tick = 104 + index * 43.2;
+        return (
+          <g key={index}>
+            <line x1={tick} y1="186" x2={tick} y2="206" stroke="#a1a1a6" strokeWidth="2" />
+            <text x={tick} y="228" fill="#a1a1a6" fontSize="10" textAnchor="middle">{index * 10 - 50}</text>
+          </g>
+        );
+      })}
+      <line x1="320" y1="172" x2="320" y2="220" stroke="#8b5cf6" strokeWidth="3" />
+      <circle cx={x} cy="196" r="12" fill={accent} />
+      <line x1={x} y1="196" x2={x} y2="146" stroke={accent} strokeWidth="3" />
+      <text x={x} y="138" fill={accent} fontSize="12" fontWeight="700" textAnchor="middle">{controlText}</text>
+      <text x="320" y="290" fill="#6e6e73" fontSize="11" fontWeight="700" textAnchor="middle">{leftText}</text>
+    </>
+  );
+}
+
+function BalanceLab({ value, target, accent, leftLabel, rightLabel, controlText }) {
+  const tilt = clamp((value - target) * 0.24, -12, 12);
+  return (
+    <>
+      <path d="M320 246L282 296H358Z" fill="#8b5cf6" />
+      <line x1="240" y1="296" x2="400" y2="296" stroke="#c7c7cc" strokeWidth="3" />
+      <g transform={`rotate(${tilt} 320 236)`}>
+        <rect x="140" y="230" width="360" height="12" rx="6" fill="#d1d1d6" />
+        {/* Hanger plus a shallow pan on each arm — a scale, not an arrow. */}
+        <line x1="164" y1="242" x2="164" y2="276" stroke="#8b5cf6" strokeWidth="3" />
+        <path d="M124 276h80l-13 24h-54Z" fill="#8b5cf6" opacity="0.85" />
+        <line x1="476" y1="242" x2="476" y2="276" stroke={accent} strokeWidth="3" />
+        <path d="M436 276h80l-13 24h-54Z" fill={accent} opacity="0.85" />
+      </g>
+      <circle cx="320" cy="236" r="12" fill="#ffffff" stroke={accent} strokeWidth="3" />
+      <text x="164" y="152" fill="#8b5cf6" fontSize="11" fontWeight="700" textAnchor="middle">{leftLabel}</text>
+      <text x="476" y="152" fill={accent} fontSize="11" fontWeight="700" textAnchor="middle">{rightLabel}</text>
+      <text x="320" y="126" fill={accent} fontSize="15" fontWeight="700" textAnchor="middle">{controlText}</text>
+    </>
+  );
+}
+
+function SequenceLab({ value, accent, controlText, leftText }) {
+  const step = 8 + clamp(value, 0, 100) * 0.34;
+  return (
+    <>
+      <line x1="112" y1="292" x2="536" y2="292" stroke="#a1a1a6" strokeWidth="3" />
+      {Array.from({ length: 6 }, (_, index) => {
+        const height = 26 + step * index;
+        return (
+          <g key={index}>
+            <rect x={128 + index * 70} y={292 - height} width="54" height={height} rx="5" fill={index % 2 ? accent : '#8b5cf6'} opacity="0.88" />
+            <text x={155 + index * 70} y="312" fill="#a1a1a6" fontSize="10" textAnchor="middle">{index + 1}</text>
+          </g>
+        );
+      })}
+      <text x="320" y="112" fill={accent} fontSize="15" fontWeight="700" textAnchor="middle">STEP {controlText}</text>
+      <text x="320" y="136" fill="#6e6e73" fontSize="11" fontWeight="700" textAnchor="middle">{leftText}</text>
+    </>
+  );
+}
+
+function ProbabilityLab({ value, accent, controlText, leftText }) {
+  const share = clamp(value, 0, 100) / 100;
+  const angle = share * Math.PI * 2 - Math.PI / 2;
+  const large = share > 0.5 ? 1 : 0;
+  const wedge = share >= 0.999
+    ? 'M320 88A92 92 0 1 1 319.9 88Z'
+    : `M320 180L320 88A92 92 0 ${large} 1 ${(320 + Math.cos(angle) * 92).toFixed(1)} ${(180 + Math.sin(angle) * 92).toFixed(1)}Z`;
+  return (
+    <>
+      <circle cx="320" cy="180" r="92" fill="#f5f5f7" stroke="#a1a1a6" strokeWidth="3" />
+      {share > 0 ? <path d={wedge} fill={accent} opacity="0.88" /> : null}
+      <circle cx="320" cy="180" r="10" fill="#1d1d1f" />
+      <path d="M320 62l14 26h-28Z" fill="#8b5cf6" />
+      <text x="320" y="306" fill={accent} fontSize="15" fontWeight="700" textAnchor="middle">{controlText}</text>
+      <text x="320" y="330" fill="#6e6e73" fontSize="11" fontWeight="700" textAnchor="middle">WINNING SHARE {leftText}</text>
+    </>
+  );
+}
+
+function MitosisLab({ value, accent, controlText, leftText }) {
+  const stage = clamp(value, 0, 100) / 100;
+  const split = stage * 46;
+  return (
+    <>
+      <line x1="112" y1="292" x2="536" y2="292" stroke="#d1d1d6" strokeWidth="3" />
+      {[0, 1, 2, 3].map((index) => (
+        <text key={index} x={158 + index * 108} y="316" fill="#a1a1a6" fontSize="10" fontWeight="700" textAnchor="middle">
+          {['ONE CELL', 'DUPLICATE', 'SEPARATE', 'TWO CELLS'][index]}
+        </text>
+      ))}
+      <ellipse cx={320 - split} cy="180" rx={62 - split * 0.35} ry="62" fill="#d1fae5" fillOpacity="0.6" stroke="#10b981" strokeWidth="4" />
+      <ellipse cx={320 + split} cy="180" rx={62 - split * 0.35} ry="62" fill="#d1fae5" fillOpacity="0.6" stroke="#10b981" strokeWidth="4" />
+      <circle cx={320 - split} cy="180" r="20" fill="#8b5cf6" />
+      <circle cx={320 + split} cy="180" r="20" fill={accent} />
+      <line x1="112" y1="272" x2={112 + stage * 424} y2="272" stroke={accent} strokeWidth="5" strokeLinecap="round" />
+      {/* The two daughter cells reach y≈118 at full separation, so the readout
+          sits above them and its second line goes below the progress bar. */}
+      <text x="320" y="104" fill={accent} fontSize="15" fontWeight="700" textAnchor="middle">{controlText}</text>
+      <text x="320" y="298" fill="#6e6e73" fontSize="11" fontWeight="700" textAnchor="middle">{leftText}</text>
+    </>
+  );
+}
+
+function DnaLab({ value, accent, controlText, leftText }) {
+  const rungs = Math.max(4, Math.round(value / 5));
+  const strand = (phase) => Array.from({ length: 61 }, (_, index) => {
+    const x = 120 + index * 6.7;
+    const y = 190 + Math.sin(index / 6 + phase) * 54;
+    return `${index ? 'L' : 'M'}${x.toFixed(1)} ${y.toFixed(1)}`;
+  }).join(' ');
+  return (
+    <>
+      <path d={strand(0)} fill="none" stroke="#8b5cf6" strokeWidth="5" />
+      <path d={strand(Math.PI)} fill="none" stroke={accent} strokeWidth="5" />
+      {Array.from({ length: Math.min(20, rungs) }, (_, index) => {
+        const t = index * 3;
+        const x = 120 + t * 6.7;
+        return <line key={index} x1={x} y1={190 + Math.sin(t / 6) * 54} x2={x} y2={190 + Math.sin(t / 6 + Math.PI) * 54} stroke="#a1a1a6" strokeWidth="3" />;
+      })}
+      <text x="320" y="300" fill={accent} fontSize="15" fontWeight="700" textAnchor="middle">{controlText}</text>
+      <text x="320" y="324" fill="#6e6e73" fontSize="11" fontWeight="700" textAnchor="middle">{leftText}</text>
+    </>
+  );
+}
+
+function MitochondriaLab({ value, accent, leftLabel, rightLabel, controlText, leftText }) {
+  const output = clamp(value, 0, 100) * 3.4;
+  return (
+    <>
+      <ellipse cx="300" cy="176" rx="150" ry="80" fill="#fee2e2" fillOpacity="0.5" stroke="#ef4444" strokeWidth="4" />
+      {Array.from({ length: 5 }, (_, index) => (
+        <path key={index} d={`M${200 + index * 50} 108q26 34 0 68q-26 34 0 68`} fill="none" stroke="#ef4444" strokeWidth="4" opacity="0.75" />
+      ))}
+      <rect x="130" y="280" width="340" height="16" rx="8" fill="#f5f5f7" stroke="#d1d1d6" />
+      <rect x="130" y="280" width={output} height="16" rx="8" fill={accent} />
+      <text x="130" y="270" fill="#6e6e73" fontSize="10" fontWeight="700">{rightLabel}</text>
+      <text x="470" y="270" fill={accent} fontSize="10" fontWeight="700" textAnchor="end">{leftText}</text>
+      <text x="300" y="86" fill="#6e6e73" fontSize="10" fontWeight="700" textAnchor="middle">{leftLabel}</text>
+      <text x="320" y="326" fill={accent} fontSize="14" fontWeight="700" textAnchor="middle">{controlText}</text>
+    </>
+  );
+}
+
+function LeafLab({ value, accent, arrowId, leftLabel, controlText, leftText }) {
+  const light = Math.max(2, Math.round(value / 12));
+  return (
+    <>
+      <circle cx="140" cy="118" r="34" fill="#fbbf24" />
+      {Array.from({ length: light }, (_, index) => (
+        <line key={index} x1={168 + index * 6} y1={132 + index * 4} x2={236 + index * 22} y2={170 + index * 8} stroke="#fbbf24" strokeWidth="3" markerEnd={`url(#${arrowId})`} />
+      ))}
+      <path d="M300 288C300 200 348 140 452 128C452 232 396 284 300 288Z" fill="#86efac" fillOpacity="0.75" stroke="#15803d" strokeWidth="4" />
+      <path d="M300 288C348 240 400 194 452 128" fill="none" stroke="#15803d" strokeWidth="3" />
+      <path d="M300 288V318" stroke="#15803d" strokeWidth="5" />
+      <text x="140" y="176" fill="#a16207" fontSize="10" fontWeight="700" textAnchor="middle">{leftLabel}</text>
+      <text x="180" y="288" fill={accent} fontSize="14" fontWeight="700" textAnchor="middle">{controlText}</text>
+      <text x="180" y="312" fill="#6e6e73" fontSize="10" fontWeight="700" textAnchor="middle">{leftText}</text>
+    </>
+  );
+}
+
+function BiodiversityLab({ value, accent, controlText, leftText }) {
+  const present = Math.max(1, Math.min(24, Math.round(value / 4.2)));
+  return (
+    <>
+      {Array.from({ length: 24 }, (_, index) => {
+        const x = 148 + (index % 6) * 60;
+        const y = 116 + Math.floor(index / 6) * 48;
+        const alive = index < present;
+        return (
+          <g key={index}>
+            <rect x={x} y={y} width="46" height="36" rx="8" fill={alive ? accent : '#f5f5f7'} stroke={alive ? accent : '#d1d1d6'} strokeWidth="2" opacity={alive ? 0.9 : 1} />
+            {alive ? <circle cx={x + 23} cy={y + 18} r="7" fill="#ffffff" /> : null}
+          </g>
+        );
+      })}
+      <text x="320" y="326" fill={accent} fontSize="15" fontWeight="700" textAnchor="middle">{controlText} · {leftText}</text>
+    </>
+  );
+}
+
+function WaterCycleLab({ value, accent, arrowId, leftLabel, rightLabel, controlText }) {
+  const drops = Math.max(2, Math.round(value / 8));
+  return (
+    <>
+      <path d="M188 128a44 44 0 0 1 86-14a36 36 0 0 1 62 26a30 30 0 0 1-8 58H206a36 36 0 0 1-18-70Z" fill="#e5e5ea" stroke="#a1a1a6" strokeWidth="3" />
+      {Array.from({ length: Math.min(12, drops) }, (_, index) => (
+        <path key={index} d={`M${212 + index * 22} 210l-6 14 6 8 6-8Z`} fill={accent} />
+      ))}
+      <path d="M96 288h448" stroke="#15803d" strokeWidth="5" />
+      <rect x="380" y="238" width="150" height="50" rx="8" fill="#cffafe" stroke={accent} strokeWidth="3" />
+      <path d="M456 236V160" stroke="#8b5cf6" strokeWidth="4" strokeDasharray="7 6" markerEnd={`url(#${arrowId})`} />
+      <text x="256" y="252" fill={accent} fontSize="10" fontWeight="700" textAnchor="middle">{leftLabel}</text>
+      <text x="500" y="152" fill="#8b5cf6" fontSize="10" fontWeight="700" textAnchor="middle">{rightLabel}</text>
+      <text x="320" y="326" fill={accent} fontSize="15" fontWeight="700" textAnchor="middle">{controlText}</text>
+    </>
+  );
+}
+
+function HeartLab({ value, accent, controlText, leftText }) {
+  const beats = Math.max(2, Math.round(value / 14));
+  const trace = Array.from({ length: 121 }, (_, index) => {
+    const x = 112 + index * 3.5;
+    const phase = (index / 120) * beats;
+    const spike = Math.abs(phase % 1 - 0.5) < 0.05 ? -44 : 0;
+    return `${index ? 'L' : 'M'}${x.toFixed(1)} ${(288 + spike).toFixed(1)}`;
+  }).join(' ');
+  // Scaled about the heart's own centre so the beat pulse never grows into the
+  // ECG trace or the readout beneath it.
+  const scale = 0.62 + (value / 100) * 0.1;
+  return (
+    <>
+      <path d="M258 148h-64M382 148h64" stroke="#e11d48" strokeWidth="6" strokeLinecap="round" />
+      <g transform={`translate(320 167) scale(${scale.toFixed(3)}) translate(-320 -167)`}>
+        <path d="M320 238c-70-46-96-80-96-114a44 44 0 0 1 96-28a44 44 0 0 1 96 28c0 34-26 68-96 114Z" fill="#fecdd3" stroke="#e11d48" strokeWidth="5" />
+      </g>
+      <path d={trace} fill="none" stroke={accent} strokeWidth="3" />
+      <text x="320" y="240" fill="#e11d48" fontSize="13" fontWeight="700" textAnchor="middle">{controlText}</text>
+      <text x="320" y="326" fill="#6e6e73" fontSize="11" fontWeight="700" textAnchor="middle">{leftText}</text>
+    </>
+  );
+}
+
+function NeuronLab({ value, accent, arrowId, controlText, leftText }) {
+  const pulse = 176 + clamp(value, 0, 100) * 2.9;
+  return (
+    <>
+      <circle cx="160" cy="188" r="46" fill="#ede9fe" stroke="#8b5cf6" strokeWidth="4" />
+      <circle cx="160" cy="188" r="16" fill="#8b5cf6" />
+      {[-1, 0, 1].map((offset) => <path key={offset} d={`M124 ${188 + offset * 30}l-42 ${offset * 26 - 4}`} stroke="#8b5cf6" strokeWidth="4" strokeLinecap="round" />)}
+      <path d="M206 188H468" stroke="#c7c7cc" strokeWidth="14" strokeLinecap="round" />
+      {Array.from({ length: 5 }, (_, index) => <rect key={index} x={218 + index * 52} y="180" width="12" height="16" rx="3" fill="#ffffff" />)}
+      <circle cx={pulse} cy="188" r="13" fill={accent} />
+      <path d="M468 188h44" stroke={accent} strokeWidth="5" markerEnd={`url(#${arrowId})`} />
+      <text x="320" y="252" fill="#6e6e73" fontSize="10" fontWeight="700" textAnchor="middle">MYELINATED AXON</text>
+      <text x="320" y="300" fill={accent} fontSize="15" fontWeight="700" textAnchor="middle">{controlText}</text>
+      <text x="320" y="324" fill="#6e6e73" fontSize="11" fontWeight="700" textAnchor="middle">{leftText}</text>
+    </>
+  );
+}
+
+function DigestionLab({ value, accent, arrowId, leftLabel, rightLabel, controlText }) {
+  const bolus = Math.max(1, Math.round(value / 14));
+  return (
+    <>
+      <path d="M300 104v46" stroke="#a1a1a6" strokeWidth="16" strokeLinecap="round" />
+      {/* Closed pouch. An open arc with a fill renders a stray wedge back to
+          the start point instead of a stomach. */}
+      <path d="M288 148c-46 12-62 62-44 106c14 34 58 46 88 26c26-18 30-58 12-86c-12-20-32-34-56-46Z" fill="#fef3c7" stroke="#d97706" strokeWidth="4" />
+      <path d="M330 288q-70 8-64 34t68 4q52-16 40 12" fill="none" stroke="#d97706" strokeWidth="13" strokeLinecap="round" />
+      {Array.from({ length: Math.min(6, bolus) }, (_, index) => (
+        <circle key={index} cx={272 + (index % 3) * 30} cy={196 + Math.floor(index / 3) * 32} r="9" fill={accent} />
+      ))}
+      <path d="M354 196h50" stroke="#8b5cf6" strokeWidth="4" markerEnd={`url(#${arrowId})`} />
+      <text x="300" y="94" fill="#6e6e73" fontSize="10" fontWeight="700" textAnchor="middle">{leftLabel}</text>
+      <text x="414" y="190" fill="#8b5cf6" fontSize="10" fontWeight="700">{rightLabel}</text>
+      <text x="474" y="290" fill={accent} fontSize="14" fontWeight="700" textAnchor="end">{controlText}</text>
+    </>
+  );
+}
+
+/**
+ * Every lab kind in `LABS` maps to exactly one apparatus here.
+ *
+ * All scenes take the same props and destructure the ones they use, so adding a
+ * lab is one entry rather than a new prop-plumbing branch. The keys are checked
+ * against `LABS` at import time below — a lab with no scene, or a scene with no
+ * lab, fails loudly instead of quietly falling back to the torque rig.
+ */
+const SCENES = {
+  lever: LeverLab,
+  friction: FrictionLab,
+  force: ForceLab,
+  collision: CollisionLab,
+  energy: EnergyLab,
+  projectile: ProjectileLab,
+  orbit: OrbitLab,
+  hydraulic: HydraulicLab,
+  thermal: ThermalLab,
+  circuit: CircuitLab,
+  magnet: MagnetLab,
+  lens: LensLab,
+  mirror: MirrorLab,
+  wave: WaveLab,
+  particle: ParticleLab,
+  gas: GasLab,
+  reaction: ReactionLab,
+  ph: PhLab,
+  atom: AtomLab,
+  bond: BondLab,
+  solution: SolutionLab,
+  redox: RedoxLab,
+  chromatography: ChromatographyLab,
+  ratio: RatioLab,
+  fraction: FractionLab,
+  coordinate: CoordinateLab,
+  geometry: GeometryLab,
+  triangle: TriangleLab,
+  circle: CircleLab,
+  area: AreaLab,
+  volume: VolumeLab,
+  numberline: NumberLineLab,
+  balance: BalanceLab,
+  sequence: SequenceLab,
+  probability: ProbabilityLab,
+  data: DataLab,
+  cell: CellLab,
+  osmosis: OsmosisLab,
+  mitosis: MitosisLab,
+  dna: DnaLab,
+  mitochondria: MitochondriaLab,
+  leaf: LeafLab,
+  ecosystem: EcosystemLab,
+  biodiversity: BiodiversityLab,
+  watercycle: WaterCycleLab,
+  lungs: LungsLab,
+  heart: HeartLab,
+  neuron: NeuronLab,
+  digestion: DigestionLab,
+};
+
+if (process.env.NODE_ENV !== 'production') {
+  const missingScene = Object.keys(LABS).filter((kind) => !SCENES[kind]);
+  const orphanScene = Object.keys(SCENES).filter((kind) => !LABS[kind]);
+  if (missingScene.length) throw new Error(`Labs with no scene: ${missingScene.join(', ')}`);
+  if (orphanScene.length) throw new Error(`Scenes with no lab: ${orphanScene.join(', ')}`);
+}
+
+function LabScene({ kind, ...props }) {
+  const Scene = SCENES[kind] ?? SCENES.lever;
+  return <Scene {...props} />;
 }
 
 /** One side of the relationship, shown as a real dimensioned quantity. */
@@ -403,6 +1095,7 @@ export default function InteractiveGraphFrame({
             target={solvedPercent}
             accent={palette.stroke}
             arrowId={arrowId}
+            gradientId={`${arrowId}-fill`}
             leftLabel={labels.left.toUpperCase()}
             rightLabel={labels.right.toUpperCase()}
             controlText={`${reading.value} ${control.unit}`.trim().toUpperCase()}
