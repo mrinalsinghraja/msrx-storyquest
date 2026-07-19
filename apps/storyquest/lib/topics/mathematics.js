@@ -389,9 +389,16 @@ const mathematics = [
     lab: 'sequence',
     formula: 'a_n = a_1 + (n-1)d',
     scenario: 'a terraced planting scheme stepping down a hillside',
-    crisis: 'The first terrace sits at 7 m elevation and the ninth must reach 63 m. The step between terraces is wrong.',
+    /**
+     * The first terrace used to sit at 7 m and the ninth at 63 m — a 56 m climb
+     * over eight steps, so the step is 7 m, the same number the sentence opens
+     * with. A learner could read the answer off the first clause and never touch
+     * the sequence. Shifted the whole scheme down by 2 m: the climb is still
+     * 56 m, the step is still 7 m, and nothing in the model changed.
+     */
+    crisis: 'The first terrace sits at 5 m elevation and the ninth must reach 61 m. The step between terraces is wrong.',
     insight: 'An arithmetic sequence adds the same amount each time. Knowing any two terms fixes the whole pattern.',
-    resolution: 'At the solved step the ninth terrace lands exactly on 63 m.',
+    resolution: 'At the solved step the ninth terrace lands exactly on 61 m.',
     model: {
       kind: 'proportional',
       params: { k: 8, targetY: 56, leftName: 'Total climb', rightName: 'Required climb', productUnit: 'm' },

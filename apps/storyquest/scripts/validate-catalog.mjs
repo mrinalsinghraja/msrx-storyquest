@@ -268,6 +268,110 @@ function validateLegacyBalance(topic, fail) {
   }
 
   checkSolvable(topic, fail);
+  checkNoAnswerLeak(topic, fail);
+}
+
+/**
+ * Numbers a learner could read as a written-out answer.
+ *
+ * "The counterweight sits three metres out" leaks exactly as hard as "3 m", and
+ * a digit scan alone never sees it.
+ *
+ * Starts at three and stops at twelve. Below three the words are unusable: an
+ * explanation like "dropping one pH unit means ten times more hydrogen ions" is
+ * generic prose, and matching "one" against a solved value of 1 flagged a
+ * perfectly good chemistry mission on the first run. Above twelve, prose reverts
+ * to digits anyway.
+ */
+const NUMBER_WORDS = {
+  3: 'three', 4: 'four', 5: 'five', 6: 'six',
+  7: 'seven', 8: 'eight', 9: 'nine', 10: 'ten', 11: 'eleven', 12: 'twelve',
+};
+
+/**
+ * Does the mission's own prose give away the answer?
+ *
+ * The whole promise of this catalogue is that the learner derives the value
+ * from the relationship. A crisis line that states it turns the lab into
+ * decoration — they read the number, drag until the readout matches, and learn
+ * nothing about why.
+ *
+ * This was previously checked by a throwaway script run once while the 102 new
+ * missions were being authored. It found eight leaks, four of which were design
+ * faults rather than typos: a reflection mission whose answer *is* the incident
+ * angle, a symmetry mission where the right side equals the left, a sorting
+ * mission with an even split, and a population mission whose parameter was
+ * literally named `carryingCapacity`. Those are exactly the failures that come
+ * back when the prose is rewritten, so the check belongs in the gate rather
+ * than in a scratch file.
+ *
+ * Deliberately narrow. It compares against the *solved* value only, not the
+ * given parameters — those are the mission's inputs and must appear in the
+ * prose. Matching is on word boundaries so that a solved 3 does not fire on
+ * "0.35" or "30".
+ */
+function checkNoAnswerLeak(topic, fail) {
+  let model;
+  try {
+    model = createModel(topic.model);
+  } catch {
+    return; // checkSolvable already reported this.
+  }
+
+  const solved = model.solvedValue;
+  if (!Number.isFinite(solved)) return;
+
+  /**
+   * Match-the-target missions are exempt, and have to be.
+   *
+   * In roughly twenty topics the solved value *is* one of the given parameters
+   * — an isotonic solution matches the concentration outside the cell, a
+   * reflected ray matches the incident angle, a population settles at its
+   * carrying capacity. The prose cannot pose those problems without stating the
+   * target, so flagging them would make this gate fail on correct missions,
+   * and a gate that cries wolf gets switched off.
+   *
+   * This exemption is narrow on purpose: it fires only when the number appears
+   * in `model.params`, which is the mission's declared input. It is not an
+   * excuse for a leak, and it is worth noting separately that these missions
+   * ask less of a learner than the rest — the answer is read off the panel
+   * rather than derived — which is a content question, not a validation one.
+   */
+  // Flattened, because some params are arrays. `mean-and-median` hands the
+  // learner five rainfall samples and the missing day happens to equal one of
+  // them; reading the number off the list is not deriving it from anywhere, so
+  // treating only scalar params as given flagged a correct mission.
+  const givens = Object.values(model.params ?? {}).flat().filter(Number.isFinite);
+  if (givens.some((given) => Math.abs(given - solved) < 1e-9)) return;
+
+  const prose = [topic.scenario, topic.crisis, topic.insight]
+    .filter((part) => typeof part === 'string')
+    .join(' ');
+  if (!prose) return;
+
+  /**
+   * `resolution` is excluded on purpose: it is shown after the learner has
+   * already committed, so naming the value there is a reward, not a spoiler.
+   */
+  const forms = new Set([String(solved)]);
+  if (Number.isInteger(solved)) {
+    if (NUMBER_WORDS[solved]) forms.add(NUMBER_WORDS[solved]);
+  } else {
+    // A learner reading "about 2.4" has the answer just as surely as "2.40".
+    forms.add(solved.toFixed(1));
+    forms.add(solved.toFixed(2));
+  }
+
+  const haystack = prose.toLowerCase();
+  for (const form of forms) {
+    const escaped = form.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    // Guarded on both sides so 3 does not match inside 0.35, 30 or 13.
+    const pattern = new RegExp(`(?<![\\d.])${escaped}(?![\\d.])`, 'i');
+    if (pattern.test(haystack)) {
+      fail(`prose names the solved value (${form}) — the learner can read the answer instead of deriving it`);
+      return;
+    }
+  }
 }
 
 /**
