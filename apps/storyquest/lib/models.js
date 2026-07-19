@@ -112,18 +112,40 @@ export const MODEL_KINDS = {
     labels: (p) => ({ left: p.leftName, right: p.rightName, unit: p.productUnit }),
   },
 
-  /** Logistic equilibrium: population is stable when N = K. */
+  /**
+   * Logistic equilibrium: population is stable when N = K.
+   *
+   * `perUnit` is how much population one unit of the control delivers — boats
+   * that each land 25 t, habitat patches that each support 3 species. It
+   * defaults to 1, which is the original identity behaviour, so every mission
+   * authored before it existed is unaffected.
+   *
+   * It exists because without it this kind cannot pose a question. `solve`
+   * returned `capacity` verbatim, and `capacity` is printed on the panel as the
+   * right-hand reading, so the learner could match the two numbers without
+   * knowing what a carrying capacity is. With a factor they still have to know
+   * the population settles at K — and then work out how many units reach it.
+   */
   carryingCapacity: {
-    solve: (p) => p.capacity,
-    left: (p, x) => x,
+    solve: (p) => p.capacity / (p.perUnit ?? 1),
+    left: (p, x) => x * (p.perUnit ?? 1),
     right: (p) => p.capacity,
     labels: (p) => ({ left: p.leftName, right: p.rightName, unit: p.productUnit }),
   },
 
-  /** Flux balance: net transfer is zero when the two potentials match. */
+  /**
+   * Flux balance: net transfer is zero when the two potentials match.
+   *
+   * Same `perUnit` escape hatch and the same reason. "Isotonic means equal" is
+   * the concept worth teaching; reading 0.9 off the right-hand readout and
+   * dragging until the left says 0.9 teaches pattern-matching instead. When the
+   * control is a dose rather than the potential itself — grams of salt per
+   * litre, each raising concentration by 0.3% — the learner has to know the
+   * goal is equality *and* convert to it.
+   */
   fluxBalance: {
-    solve: (p) => p.outside,
-    left: (p, x) => x,
+    solve: (p) => p.outside / (p.perUnit ?? 1),
+    left: (p, x) => x * (p.perUnit ?? 1),
     right: (p) => p.outside,
     labels: (p) => ({ left: p.leftName, right: p.rightName, unit: p.productUnit }),
   },
