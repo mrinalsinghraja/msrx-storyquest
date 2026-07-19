@@ -1,6 +1,7 @@
 import Groq from 'groq-sdk';
 import { NextResponse } from 'next/server';
 import { findMission } from '../../../lib/curriculum';
+import { clientKey, rateLimit } from '../../../lib/rate-limit';
 import { buildStory } from '../../../lib/story-builder';
 
 export const runtime = 'nodejs';
@@ -78,6 +79,33 @@ async function generateNarrative(apiKey, mission, previousErrors) {
 }
 
 export async function POST(request) {
+  /**
+   * Throttled before anything else runs.
+   *
+   * Every call past this point can become a paid model completion, so the limit
+   * is checked ahead of body parsing rather than ahead of the Groq call: a
+   * rejected caller should cost this route as close to nothing as possible.
+   *
+   * Ten a minute is far above what the "retell this mission" button can produce
+   * under a human finger and far below what a loop needs to be worth running.
+   */
+  const decision = rateLimit(clientKey(request), { limit: 10, windowMs: 60_000 });
+  if (!decision.ok) {
+    return NextResponse.json(
+      { error: 'Too many story requests. Try again shortly.' },
+      {
+        status: 429,
+        headers: {
+          'Cache-Control': 'no-store, max-age=0',
+          'Retry-After': String(decision.retryAfter),
+          'RateLimit-Limit': '10',
+          'RateLimit-Remaining': '0',
+          'RateLimit-Reset': String(decision.retryAfter),
+        },
+      },
+    );
+  }
+
   let payload = {};
   try {
     payload = await request.json();

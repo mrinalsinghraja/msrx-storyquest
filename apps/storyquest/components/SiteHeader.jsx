@@ -4,8 +4,17 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import MSRXLogo from './MSRXLogo';
+import SearchPalette, { useSearchPalette } from './SearchPalette';
 
+/**
+ * `Home` is listed explicitly rather than left to the wordmark.
+ *
+ * The logo does link home, but that is a convention people have to already know.
+ * A named link costs one nav slot and removes the guess — which matters most for
+ * the learners this is aimed at, who are the least likely to try clicking a logo.
+ */
 const links = [
+  { href: '/', label: 'Home' },
   { href: '/learn', label: 'Catalogue' },
   { href: '/faq', label: 'FAQ' },
   { href: '/privacy', label: 'Privacy' },
@@ -24,9 +33,24 @@ function Brand() {
   );
 }
 
+/** Opens the palette. Shows the shortcut on desktop, where a keyboard exists. */
+function SearchTrigger({ onOpen }) {
+  return (
+    <button type="button" onClick={onOpen} className="palette-trigger focus-ring" aria-label="Search missions">
+      <svg viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.7">
+        <circle cx="9" cy="9" r="5.5" />
+        <path d="M13.2 13.2 17 17" strokeLinecap="round" />
+      </svg>
+      <span className="hidden lg:inline">Search missions</span>
+      <kbd className="palette-kbd hidden lg:inline">⌘K</kbd>
+    </button>
+  );
+}
+
 export default function SiteHeader() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const palette = useSearchPalette();
 
   return (
     <header className="nav-blur sticky top-0 z-40 border-b border-[var(--border)]">
@@ -54,6 +78,7 @@ export default function SiteHeader() {
             MSRX Portal
             <span aria-hidden="true" className="text-[11px]">↗</span>
           </a>
+          <SearchTrigger onOpen={() => palette.setOpen(true)} />
           <Link
             href="/learn"
             className="focus-ring msrx-gradient inline-flex h-9 items-center rounded-full px-4 text-[13px] font-semibold text-white shadow-sm transition hover:opacity-90"
@@ -62,15 +87,31 @@ export default function SiteHeader() {
           </Link>
         </nav>
 
-        <button
-          type="button"
-          aria-label="Toggle navigation"
-          aria-expanded={isOpen}
-          onClick={() => setIsOpen((open) => !open)}
-          className="focus-ring grid h-10 w-10 place-items-center rounded-xl border border-[var(--border-strong)] bg-white text-[var(--text-primary)] md:hidden"
-        >
-          <span className="text-lg" aria-hidden="true">{isOpen ? '×' : '☰'}</span>
-        </button>
+        <div className="flex items-center gap-2 md:hidden">
+          {/* Search sits outside the hamburger on purpose: burying it behind a
+            * menu makes it a thing you find, when it should be a thing you use. */}
+          <button
+            type="button"
+            onClick={() => palette.setOpen(true)}
+            aria-label="Search missions"
+            className="focus-ring grid h-10 w-10 place-items-center rounded-xl border border-[var(--border-strong)] bg-white text-[var(--text-secondary)]"
+          >
+            <svg viewBox="0 0 20 20" className="h-4 w-4" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8">
+              <circle cx="9" cy="9" r="5.5" />
+              <path d="M13.2 13.2 17 17" strokeLinecap="round" />
+            </svg>
+          </button>
+
+          <button
+            type="button"
+            aria-label="Toggle navigation"
+            aria-expanded={isOpen}
+            onClick={() => setIsOpen((open) => !open)}
+            className="focus-ring grid h-10 w-10 place-items-center rounded-xl border border-[var(--border-strong)] bg-white text-[var(--text-primary)]"
+          >
+            <span className="text-lg" aria-hidden="true">{isOpen ? '×' : '☰'}</span>
+          </button>
+        </div>
       </div>
 
       {isOpen ? (
@@ -103,6 +144,8 @@ export default function SiteHeader() {
           </div>
         </nav>
       ) : null}
+
+      <SearchPalette open={palette.open} onClose={palette.close} />
     </header>
   );
 }

@@ -1248,3 +1248,231 @@
  * components/InteractiveGraphFrame.jsx, where `prefers-reduced-motion` is
  * honoured by freezing the clock rather than by a media query here.
  */
+
+/* ===========================================================================
+ * Search palette.
+ *
+ * Global rather than scoped under `.catalogue`, because this is the one surface
+ * that has to look identical on the marketing pages, the plate catalogue and
+ * the mission player — three areas that otherwise share almost no styling. It
+ * borrows the portal tokens so it reads as chrome, not as a page element.
+ * ======================================================================== */
+
+.palette-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: clamp(1rem, 12vh, 8rem) 1rem 1rem;
+  background: rgba(15, 17, 21, 0.34);
+  backdrop-filter: saturate(160%) blur(6px);
+  -webkit-backdrop-filter: saturate(160%) blur(6px);
+  animation: palette-fade 140ms ease-out;
+}
+
+.palette {
+  width: 100%;
+  max-width: 34rem;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 18px;
+  border: 1px solid var(--border-strong);
+  background: var(--background);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.22);
+  animation: palette-rise 160ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.palette-field {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.palette-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  color: var(--text-tertiary);
+}
+
+.palette-field input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font-size: 15px;
+  color: var(--text-primary);
+}
+
+.palette-field input::placeholder {
+  color: var(--text-tertiary);
+}
+
+.palette-kbd,
+.palette-foot kbd {
+  flex-shrink: 0;
+  padding: 0.15rem 0.4rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
+  background: var(--surface);
+  font-family: var(--font-data), ui-monospace, monospace;
+  font-size: 10px;
+  line-height: 1.4;
+  color: var(--text-tertiary);
+}
+
+.palette-results {
+  max-height: min(52vh, 26rem);
+  overflow-y: auto;
+  padding: 0.4rem;
+}
+
+.palette-note {
+  padding: 1.4rem 1rem;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.palette-hit {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.6rem 0.7rem;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  color: inherit;
+}
+
+/* Highlight follows the keyboard, so pointer hover sets `active` rather than
+ * painting a second, competing highlight of its own. */
+.palette-hit[data-active='true'] {
+  background: var(--surface);
+}
+
+.palette-glyph {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  border-radius: 9px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  font-size: 14px;
+}
+
+.palette-hit-body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.palette-hit-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.palette-hit-meta {
+  margin-top: 1px;
+  font-size: 11px;
+  color: var(--text-tertiary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.palette-hit-number {
+  flex-shrink: 0;
+  font-family: var(--font-data), ui-monospace, monospace;
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+
+/* Visually hidden, but a live region: the result count has to reach a screen
+ * reader that cannot see the list reflow under the cursor. */
+.palette-live {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.palette-foot {
+  display: flex;
+  gap: 1rem;
+  padding: 0.6rem 1rem;
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+
+.palette-foot span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+/* The trigger that sits in the site header. */
+.palette-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 36px;
+  padding: 0 0.6rem 0 0.7rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  background: var(--background);
+  font-size: 13px;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  transition: border-color 160ms ease, color 160ms ease;
+}
+
+.palette-trigger:hover {
+  border-color: var(--accent-cyan);
+  color: var(--text-secondary);
+}
+
+.palette-trigger svg {
+  width: 15px;
+  height: 15px;
+}
+
+@keyframes palette-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes palette-rise {
+  from { opacity: 0; transform: translateY(-8px) scale(0.985); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .palette-backdrop,
+  .palette {
+    animation: none;
+  }
+}

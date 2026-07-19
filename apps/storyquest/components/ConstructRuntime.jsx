@@ -171,6 +171,7 @@ export default function ConstructRuntime({ mission }) {
       progress={isSatisfied ? 1 : 0}
       conceptLabel={`${mission.subjectLabel} · ${mission.difficulty}`}
       missionNumber={String(mission.number).padStart(3, '0')}
+      mission={mission}
       formula={null}
       onExit={() => router.push('/learn')}
     >
