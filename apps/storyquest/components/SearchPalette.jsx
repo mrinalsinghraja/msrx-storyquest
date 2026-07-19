@@ -164,7 +164,10 @@ function PaletteDialog({ onClose }) {
             type="text"
             value={query}
             onChange={(event) => { setQuery(event.target.value); setActive(0); }}
-            placeholder="Search 100 missions, chapters and subjects…"
+            /* No count here on purpose: this is a client component, and importing
+             * the catalogue to quote a number would ship every mission's prose to
+             * the browser to fill in one word. */
+            placeholder="Search missions, chapters and subjects…"
             aria-label="Search missions, chapters and subjects"
             aria-controls={listId}
             aria-expanded="true"

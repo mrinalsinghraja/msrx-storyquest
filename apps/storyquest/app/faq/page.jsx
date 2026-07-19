@@ -1,5 +1,6 @@
 import SiteFooter from '../../components/SiteFooter';
 import SiteHeader from '../../components/SiteHeader';
+import { CATALOGUE, gradeRange, subjectBreakdown } from '../../lib/catalogue-stats';
 
 export const metadata = { title: 'FAQ', description: 'Answers about using MSRX StoryQuest interactive STEM missions.' };
 
@@ -10,7 +11,7 @@ const questions = [
   ['Is the answer a real number, or just "somewhere near the middle"?', 'It is a real number. Every mission is built on an actual equation with real quantities, and the balance point is solved from that equation. Torque balance answers 2.4 m because 12 kN × 1.8 m equals 9 kN × 2.4 m — not because 2.4 happens to sit in the middle of the slider.'],
   ['Why does the mission show two numbers instead of a score?', 'Because the two numbers are the point. You are watching both sides of a relationship respond in their own units, so you can see which way you are wrong and by how much, rather than being told right or wrong.'],
   ['Can I use it on a phone or tablet?', 'Yes. The interface is mobile-first, the controls are touch-friendly, and pinch-zoom is never blocked.'],
-  ['What subjects are included?', 'Physics, Chemistry, Mathematics and Biology, with 25 missions in each — 100 in total, across 49 different visual labs.'],
+  ['What subjects are included?', `Physics, Chemistry, Mathematics and Biology: ${subjectBreakdown()} — ${CATALOGUE.missions} in total, across ${CATALOGUE.labs} different visual labs and ${gradeRange}.`],
   ['What does "Same problem, new story" do?', 'It asks an AI to rewrite the scene around the mission — a different setting, a different crisis. The equation, the quantities and the answer never change; only the storytelling does.'],
   ['Is this a replacement for a teacher or textbook?', 'No. StoryQuest supports exploration, discussion and conceptual practice alongside teaching and other learning materials.'],
   ['Does StoryQuest collect my personal information?', 'No accounts, no cookies, no analytics, and no learner profile. Your progress lives in the browser tab and is gone on refresh. Read the Privacy Policy for the full explanation.'],

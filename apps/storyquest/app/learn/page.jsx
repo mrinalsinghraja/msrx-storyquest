@@ -3,10 +3,11 @@ import SiteFooter from '../../components/SiteFooter';
 import SiteHeader from '../../components/SiteHeader';
 import { chapterCatalog } from '../../lib/curriculum';
 import { DISCIPLINES } from '../../lib/taxonomy';
+import { CATALOGUE, gradeRange } from '../../lib/catalogue-stats';
 
 export const metadata = {
   title: 'Catalogue',
-  description: 'Four disciplines, 28 chapters, 100 interactive STEM simulators. Every mission is solved from a real equation.',
+  description: `${CATALOGUE.disciplines} disciplines, ${CATALOGUE.chapters} chapters, ${CATALOGUE.missions} interactive STEM simulators spanning ${gradeRange}. Every mission is solved from a real equation.`,
   alternates: { canonical: '/learn' },
 };
 

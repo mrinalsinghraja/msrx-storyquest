@@ -1,4 +1,5 @@
 import { ImageResponse } from 'next/og';
+import { CATALOGUE } from '../lib/catalogue-stats';
 
 export const runtime = 'edge';
 export const alt = 'MSRX StoryQuest — Interactive STEM missions where the answer comes from the equation.';
@@ -66,7 +67,7 @@ export default function OGImage() {
         </div>
 
         <div style={{ display: 'flex', fontSize: 26, color: '#6e6e73', marginTop: 28, position: 'relative' }}>
-          100 interactive STEM missions · physics · chemistry · maths · biology
+          {CATALOGUE.missions} interactive STEM missions · physics · chemistry · maths · biology
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginTop: 40, position: 'relative' }}>

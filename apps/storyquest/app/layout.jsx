@@ -1,6 +1,7 @@
 import { Inter, Instrument_Serif, JetBrains_Mono, Newsreader } from 'next/font/google';
 import './globals.css';
 import { SITE_ORIGIN, canonical } from '../lib/site';
+import { CATALOGUE, gradeRange } from '../lib/catalogue-stats';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
 
@@ -39,7 +40,7 @@ export const metadata = {
     template: '%s — MSRX StoryQuest',
   },
   description:
-    'MSRX StoryQuest turns physics, chemistry, maths and biology into 100 interactive missions. Tune a live lab until the real equation balances. Free, no sign-up, nothing stored.',
+    `MSRX StoryQuest turns physics, chemistry, maths and biology into ${CATALOGUE.missions} interactive missions across ${gradeRange}. Tune a live lab until the real equation balances. Free, no sign-up, nothing stored.`,
   applicationName: 'MSRX StoryQuest',
   authors: [{ name: 'Mrinal Singh Raja', url: 'https://www.linkedin.com/in/mrinalsinghraja/' }],
   creator: 'Mrinal Singh Raja',
@@ -55,7 +56,7 @@ export const metadata = {
   openGraph: {
     title: 'MSRX StoryQuest — Interactive STEM Missions',
     description:
-      '100 interactive STEM missions across physics, chemistry, maths and biology. Every answer is solved from a real equation, not guessed.',
+      `${CATALOGUE.missions} interactive STEM missions across physics, chemistry, maths and biology. Every answer is solved from a real equation, not guessed.`,
     url: canonical('/'),
     siteName: 'MSRX StoryQuest',
     locale: 'en_US',
@@ -64,7 +65,7 @@ export const metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'MSRX StoryQuest — Interactive STEM Missions',
-    description: '100 interactive STEM missions where the answer comes from the equation, not a guess.',
+    description: `${CATALOGUE.missions} interactive STEM missions where the answer comes from the equation, not a guess.`,
     creator: '@mrinalsinghraja',
     site: '@mrinalsinghraja',
   },
@@ -96,7 +97,7 @@ const jsonLd = {
       applicationCategory: 'EducationalApplication',
       operatingSystem: 'Web',
       description:
-        '100 interactive STEM missions across physics, chemistry, mathematics and biology. Each mission is built on a real equation; the learner tunes a live lab until both sides balance.',
+        `${CATALOGUE.missions} interactive STEM missions across physics, chemistry, mathematics and biology, covering ${gradeRange}. Each mission is built on a real equation; the learner tunes a live lab until both sides balance.`,
       offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
       publisher: { '@id': 'https://www.msrx.co.in/#organization' },
       isPartOf: { '@id': 'https://www.msrx.co.in/#website' },

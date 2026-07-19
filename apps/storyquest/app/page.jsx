@@ -2,6 +2,7 @@ import Link from 'next/link';
 import SiteFooter from '../components/SiteFooter';
 import SiteHeader from '../components/SiteHeader';
 import MSRXLogo from '../components/MSRXLogo';
+import { CATALOGUE, gradeRange, perSubject } from '../lib/catalogue-stats';
 
 const steps = [
   { number: '01', title: 'Enter a live system', text: 'Start inside a problem, not a worksheet. Every mission opens on a situation that is already going wrong.' },
@@ -82,8 +83,8 @@ export default function HomePage() {
               </h1>
 
               <p className="mt-6 max-w-xl text-[17px] leading-8 text-[var(--text-secondary)]">
-                100 interactive missions across physics, chemistry, maths and biology. Tune a live lab until the real
-                equation balances — the answer comes from the relationship, never from a guess.
+                {CATALOGUE.missions} interactive missions across physics, chemistry, maths and biology, spanning {gradeRange}.
+                Tune a live lab until the real equation balances — the answer comes from the relationship, never from a guess.
               </p>
 
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -131,7 +132,7 @@ export default function HomePage() {
                 <h2 className="mt-3 text-3xl font-bold tracking-tight text-[var(--text-primary)]">Find the system behind the story.</h2>
               </div>
               <Link href="/learn" className="focus-ring rounded text-sm font-semibold text-[var(--accent-cyan)] hover:opacity-80">
-                Browse all 100 missions →
+                Browse all {CATALOGUE.missions} missions →
               </Link>
             </div>
 
@@ -143,7 +144,11 @@ export default function HomePage() {
                   </span>
                   <h3 className="mt-5 text-lg font-semibold text-[var(--text-primary)]">{subject.label}</h3>
                   <p className="mt-2 text-[14px] leading-6 text-[var(--text-secondary)]">{subject.description}</p>
-                  <span className="mt-4 block text-[13px] font-semibold text-[var(--accent-cyan)]">25 missions →</span>
+                  {/* Per-subject, not a shared constant. All four happened to hold
+                    * 25 when this was written, so one hardcoded number looked
+                    * correct on every card and stopped being correct on all four
+                    * the moment the subjects grew at different rates. */}
+                  <span className="mt-4 block text-[13px] font-semibold text-[var(--accent-cyan)]">{perSubject[subject.label]} missions →</span>
                 </Link>
               ))}
             </div>
