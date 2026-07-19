@@ -96,6 +96,7 @@ function BalanceRuntime({ mission }) {
       progress={engine.progress}
       conceptLabel={`${mission.subjectLabel} · ${mission.difficulty}`}
       missionNumber={String(mission.number).padStart(3, '0')}
+      mission={mission}
       formula={mission.formula}
       onExit={() => router.push('/learn')}
     >

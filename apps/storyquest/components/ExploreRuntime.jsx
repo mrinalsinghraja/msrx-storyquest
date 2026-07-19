@@ -270,6 +270,7 @@ export default function ExploreRuntime({ mission }) {
       progress={complete ? 1 : tracker.satisfied ? 0.6 : 0}
       conceptLabel={`${mission.subjectLabel} · ${mission.difficulty}`}
       missionNumber={String(mission.number).padStart(3, '0')}
+      mission={mission}
       formula={null}
       onExit={() => router.push('/learn')}
     >
