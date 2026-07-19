@@ -20,14 +20,21 @@ const links = [
   { href: '/privacy', label: 'Privacy' },
 ];
 
-/** `MSRX` in the brand gradient, product name in ink — the house wordmark. */
+/**
+ * The house wordmark.
+ *
+ * The mark keeps the cyan-to-purple gradient — that is the MSRX identity and it
+ * is not this site's to reassign. The *text* no longer repeats it: the gradient
+ * ran on both the logo and the word "MSRX", which made the wordmark the loudest
+ * thing on a page whose loudest thing should be the lab. One carrier is enough.
+ */
 function Brand() {
   return (
     <Link href="/" className="focus-ring inline-flex select-none items-center gap-2.5 rounded-lg">
       <MSRXLogo size={26} />
-      <span className="text-[17px] font-bold tracking-tight">
-        <span className="msrx-gradient-text">MSRX</span>{' '}
-        <span className="text-[var(--text-primary)]">StoryQuest</span>
+      <span className="text-[17px] tracking-tight text-[var(--text-primary)]">
+        <span className="font-semibold">MSRX</span>{' '}
+        <span className="font-bold">StoryQuest</span>
       </span>
     </Link>
   );
@@ -79,9 +86,12 @@ export default function SiteHeader() {
             <span aria-hidden="true" className="text-[11px]">↗</span>
           </a>
           <SearchTrigger onOpen={() => palette.setOpen(true)} />
+          {/* Console black, matching the primary action on the page below it.
+            * A gradient pill here and a black button in the hero read as two
+            * different products' idea of "the main thing to click". */}
           <Link
             href="/learn"
-            className="focus-ring msrx-gradient inline-flex h-9 items-center rounded-full px-4 text-[13px] font-semibold text-white shadow-sm transition hover:opacity-90"
+            className="focus-ring inline-flex h-9 items-center rounded-full bg-[var(--console)] px-4 text-[13px] font-semibold text-white transition hover:opacity-90"
           >
             Start a mission
           </Link>
@@ -137,7 +147,7 @@ export default function SiteHeader() {
             <Link
               href="/learn"
               onClick={() => setIsOpen(false)}
-              className="focus-ring msrx-gradient mt-1 rounded-xl px-3 py-3 text-center text-sm font-semibold text-white"
+              className="focus-ring mt-1 rounded-xl bg-[var(--console)] px-3 py-3 text-center text-sm font-semibold text-white"
             >
               Start a mission
             </Link>

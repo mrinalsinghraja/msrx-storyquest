@@ -9,7 +9,13 @@
  * other MSRX web app — including the lab canvas, which follows HyperLab.
  */
 :root {
-  --background: #ffffff;
+  /* Warm paper, site-wide.
+   *
+   * White here and warm paper on the home page put a visible temperature seam
+   * at every route change. Cards and lab screens stay pure white on purpose —
+   * that small step is what makes an instrument read as sitting *on* the page
+   * rather than being cut out of it. */
+  --background: oklch(0.985 0.004 85);
   --surface: #f5f5f7;
   --surface-hover: #f0f0f2;
   --border: rgba(0, 0, 0, 0.06);
@@ -70,7 +76,13 @@
 }
 
 @theme inline {
-  --font-sans: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  /* Plex, not Inter.
+   *
+   * One body face for the whole site is the point of this pass — the header and
+   * the mission shell were on Inter while the home page had moved to Plex, which
+   * is exactly the kind of seam that made this read as three separate sites.
+   * Plex also has the script coverage the audience needs. */
+  --font-sans: var(--font-body), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --color-msrx-cyan: #00c4df;
   --color-msrx-purple: #8b5cf6;
   --color-ink: #1d1d1f;
@@ -124,10 +136,12 @@
     background-clip: text;
   }
 
+  /* Tinted to the paper it floats over. Pure white left a visible cold seam
+   * along the top of every page once the body went warm. */
   .nav-blur {
     backdrop-filter: saturate(180%) blur(20px);
     -webkit-backdrop-filter: saturate(180%) blur(20px);
-    background: rgba(255, 255, 255, 0.85);
+    background: color-mix(in oklch, var(--paper-warm) 86%, transparent);
   }
 
   .card-hover {
@@ -167,9 +181,9 @@
   --pigment: var(--world-physics);
   --pigment-ink: var(--world-physics-ink);
 
-  /* Rebound locally rather than globally. `--font-display` is already the
-   * catalogue's Instrument Serif; reassigning it at :root would silently
-   * restyle every plate heading in the library. */
+  /* Rebound per host rather than at :root. The catalogue block owns its own
+   * binding of the same name, so each area declares the face it wants and
+   * neither can silently restyle the other. */
   --font-display: var(--font-headline);
 
   background: var(--paper-warm);
@@ -468,10 +482,23 @@
  * copy of the six pigments rather than a second set drifting out of step. */
 .catalogue,
 .apparatus {
-  /* Cool drawing-sheet stock, deliberately not the warm cream default. */
-  --paper: oklch(0.972 0.004 250);
-  --paper-deep: oklch(0.945 0.006 250);
-  --paper-raise: oklch(0.995 0.002 250);
+  /* Rebound to the workbench faces.
+   *
+   * Every heading and every body run in this block reaches its font through
+   * `--font-display` and `--font-text`, so these two lines are the whole
+   * conversion — 202 plates, the chapter indexes and the apparatus panels, with
+   * no selector below this point touched. The library was set in Instrument
+   * Serif over Newsreader, which read as a literary quarterly for adults; the
+   * audience is six to sixteen. Both serif families were dropped from
+   * layout.jsx once this left them with no consumer. */
+  --font-display: var(--font-headline);
+  --font-text: var(--font-body);
+
+  /* Warmed to match the site paper. These were a cool drawing-sheet stock,
+   * which put a temperature seam at the /learn boundary. */
+  --paper: oklch(0.972 0.004 85);
+  --paper-deep: oklch(0.945 0.006 85);
+  --paper-raise: oklch(0.998 0.002 85);
 
   --ink: oklch(0.205 0.014 265);
   --ink-2: oklch(0.455 0.012 265);
@@ -480,12 +507,16 @@
   --rule: oklch(0.205 0.014 265 / 0.16);
   --rule-soft: oklch(0.205 0.014 265 / 0.07);
 
-  /* World pigments. Chroma is held under 0.09 so each reads as a printing ink
-   * rather than a UI accent, while L stays dark enough for text on paper. */
-  --pig-physics: oklch(0.48 0.075 235);
-  --pig-chemistry: oklch(0.44 0.085 330);
-  --pig-mathematics: oklch(0.52 0.085 75);
-  --pig-biology: oklch(0.45 0.07 155);
+  /* World pigments, now pointing at the single site-wide ink set.
+   *
+   * These were a separate, more muted quartet at slightly different hue angles,
+   * so a physics plate in the library and a physics card on the home page were
+   * two different blues. One source of truth; the ink set is already tuned to
+   * clear 4.5:1 as body text on paper. */
+  --pig-physics: var(--world-physics-ink);
+  --pig-chemistry: var(--world-chemistry-ink);
+  --pig-mathematics: var(--world-mathematics-ink);
+  --pig-biology: var(--world-biology-ink);
   --pigment: var(--ink);
 
   /* 4px base. Named for the role each step plays in the page rhythm. */
@@ -503,7 +534,7 @@
 
   background: var(--paper);
   color: var(--ink);
-  font-family: var(--font-text), Georgia, "Times New Roman", serif;
+  font-family: var(--font-text), ui-sans-serif, system-ui, sans-serif;
   font-size: 1rem;
   line-height: 1.65;
 }
@@ -552,7 +583,7 @@
 }
 
 .catalogue .display {
-  font-family: var(--font-display), Georgia, serif;
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
   font-weight: 400;
   letter-spacing: -0.02em;
   line-height: 0.98;
@@ -602,7 +633,7 @@
 }
 
 .catalogue .masthead h1 {
-  font-family: var(--font-display), Georgia, serif;
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
   font-weight: 400;
   letter-spacing: -0.025em;
   line-height: 0.96;
@@ -816,7 +847,7 @@
 
 .catalogue .plate h3 {
   margin: 0;
-  font-family: var(--font-display), Georgia, serif;
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
   font-weight: 400;
   letter-spacing: -0.015em;
   line-height: 1.05;
@@ -942,7 +973,7 @@
 
 .catalogue .empty h2 {
   margin: 0;
-  font-family: var(--font-display), Georgia, serif;
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
   font-weight: 400;
   font-size: 2rem;
 }
@@ -1024,7 +1055,7 @@
 .catalogue .chapter-no { color: var(--pigment); }
 
 .catalogue .chapter-body h2 {
-  font-family: var(--font-display), Georgia, serif;
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
   font-weight: 400;
   font-size: 1.5rem;
   letter-spacing: -0.015em;
@@ -1205,7 +1236,7 @@
 /* The task, set in the display serif. It is the only sentence in the panel and
  * it should read as a caption on a plate, not as UI chrome. */
 .apparatus .apparatus-brief {
-  font-family: var(--font-display), Georgia, serif;
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
   font-size: clamp(1.125rem, 2.4vw, 1.4rem);
   line-height: 1.25;
   letter-spacing: -0.01em;
@@ -1334,7 +1365,7 @@
 .construct-send:hover { color: var(--pigment); border-bottom-color: var(--pigment); }
 
 .construct-empty {
-  font-family: var(--font-text), Georgia, serif;
+  font-family: var(--font-text), ui-sans-serif, system-ui, sans-serif;
   font-size: 0.875rem;
   color: var(--ink-3);
 }
@@ -1480,7 +1511,7 @@
 /* The checkpoint question is the second half of the task, so it takes the same
  * serif the brief does. */
 .explore-checkpoint h4 {
-  font-family: var(--font-display), Georgia, serif;
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
   font-size: 1.125rem;
   font-weight: 400;
   letter-spacing: -0.01em;
@@ -1520,7 +1551,7 @@
 }
 
 .explore-checkpoint .caption {
-  font-family: var(--font-text), Georgia, serif;
+  font-family: var(--font-text), ui-sans-serif, system-ui, sans-serif;
   font-style: italic;
   font-size: 0.875rem;
   color: var(--ink-2);

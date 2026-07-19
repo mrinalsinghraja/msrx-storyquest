@@ -1,9 +1,7 @@
-import { Bricolage_Grotesque, IBM_Plex_Sans, Inter, Instrument_Serif, JetBrains_Mono, Newsreader } from 'next/font/google';
+import { Bricolage_Grotesque, IBM_Plex_Sans, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import { SITE_ORIGIN, canonical } from '../lib/site';
 import { CATALOGUE, gradeRange } from '../lib/catalogue-stats';
-
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
 
 /**
  * Workbench faces, used by `.bench` in globals.css.
@@ -32,27 +30,15 @@ const plexSans = IBM_Plex_Sans({
 });
 
 /**
- * Catalogue faces, used only by the mission library (`.catalogue` in globals.css).
+ * Telemetry face. Every measured number on the site is set in it — plate
+ * numbers, readouts, chapter rules — which is the one job it has.
  *
- * The rest of the site stays on Inter and the portal tokens. Loading them here
- * rather than in the route keeps a single font pipeline, and `display: swap`
- * plus the fallback stacks mean a slow font never blanks the page.
+ * Instrument Serif and Newsreader used to sit here too, for the catalogue.
+ * `.catalogue` now rebinds `--font-display` and `--font-text` to the workbench
+ * faces, so both had no consumer left and were two font families downloaded for
+ * nothing. Checked before removing: all eleven `var(--font-display|text)` reads
+ * are inside blocks that rebind them.
  */
-const instrumentSerif = Instrument_Serif({
-  subsets: ['latin'],
-  weight: '400',
-  style: ['normal', 'italic'],
-  variable: '--font-display',
-  display: 'swap',
-});
-
-const newsreader = Newsreader({
-  subsets: ['latin'],
-  style: ['normal', 'italic'],
-  variable: '--font-text',
-  display: 'swap',
-});
-
 const jetbrainsMono = JetBrains_Mono({
   subsets: ['latin'],
   variable: '--font-data',
@@ -144,7 +130,7 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${bricolage.variable} ${plexSans.variable} ${instrumentSerif.variable} ${newsreader.variable} ${jetbrainsMono.variable} h-full antialiased`}
+      className={`${bricolage.variable} ${plexSans.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col font-sans">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
