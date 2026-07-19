@@ -45,25 +45,36 @@ export default function HomePage() {
                 {CATALOGUE.missions} live labs · {gradeRange}
               </p>
 
-              {/* States the situation the learner is dropped into, in their
-                * words. The page this replaces opened "Think deeply. Change the
-                * outcome." — an instruction and a promise, neither of which
-                * tells you what the thing actually is. */}
+              {/* Leads with the one thing no other STEM site can claim: the
+                * answer is solved out of a real equation, so it cannot be
+                * guessed or copied off the panel. The line this replaces —
+                * "Something is going wrong. You get one dial." — named a vague
+                * problem and a mechanic. It said what you are given, not why
+                * anyone should stay.
+                *
+                * The turn is coloured rather than bolded so the claim and its
+                * payoff read as one sentence with a pivot, not two headlines.
+                * `--pigment-ink` is the contrast-checked ramp; the display
+                * ramp is too light to carry text. */}
               <h1 style={{ marginTop: '1.2rem' }}>
-                Something is going wrong.
+                Guessing won’t get you through.
                 <br />
-                You get one dial.
+                <span style={{ color: 'var(--pigment-ink)' }}>That’s the point.</span>
               </h1>
 
+              {/* Kept short on purpose. The audience starts at class 1, and the
+                * first draft ran 71 words explaining that there is no multiple
+                * choice — which the headline has already said. Saying it twice
+                * argued with the reader instead of inviting them in. */}
               <p className="lede" style={{ marginTop: '1.4rem' }}>
-                Every mission drops you into a system that is failing — a crane creeping, a circuit
-                overloading, a pond losing its fish. You get one real control and a live lab. Move it
-                until the equation balances. There is nothing to guess at: the numbers have to agree.
+                Every mission drops you into something breaking — a crane tipping, a circuit
+                overloading, a pond losing its fish. You get one dial and a real lab. Move it until
+                both sides of the equation agree, and the lab tells you the moment they do.
               </p>
 
               <div className="actions" style={{ marginTop: '2rem' }}>
                 <Link className="btn btn-primary" href={heroMission.path}>
-                  Start this mission
+                  Try this one
                 </Link>
                 <Link className="btn btn-quiet" href="/learn">
                   Browse all {CATALOGUE.missions}
@@ -71,7 +82,7 @@ export default function HomePage() {
               </div>
 
               <p className="eyebrow" style={{ marginTop: '1.6rem' }}>
-                Free · No sign-up · Nothing stored
+                Free · No sign-up · Works on any phone
               </p>
             </div>
 
