@@ -27,6 +27,7 @@
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { compilePredicate } from '../lib/predicate-compile.js';
+import { createModel } from '../lib/models.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const load = async (rel) => (await import(path.join(ROOT, rel))).default ?? (await import(path.join(ROOT, rel)));
@@ -76,6 +77,9 @@ function checkPredicate(source, fail) {
 const errors = [];
 const stats = { total: 0, v1: 0, v2: 0, byKind: { balance: 0, construct: 0, explore: 0 } };
 
+/** Every topic seen, flattened, for the cross-topic checks that run after the walk. */
+const authored = [];
+
 const isFiniteNumber = (value) => typeof value === 'number' && Number.isFinite(value);
 const isNonEmptyString = (value) => typeof value === 'string' && value.trim().length > 0;
 
@@ -107,6 +111,7 @@ async function main() {
       const ref = `${discipline}[${index}] ${topic?.slug ?? '<no slug>'}`;
       const fail = (message) => errors.push(`${ref}: ${message}`);
       stats.total += 1;
+      authored.push({ chapterId: topic.chapterId, lab: topic.lab, slug: topic.slug ?? `<${discipline}[${index}]>` });
 
       /* --- identity and taxonomy ------------------------------------- */
 
@@ -191,7 +196,39 @@ async function main() {
     });
   }
 
+  checkChapterVariety();
   report();
+}
+
+/**
+ * No chapter may lean on one apparatus.
+ *
+ * A chapter where six topics all open on the same rig stops reading as a
+ * chapter and starts reading as one simulator with six coats of paint. The
+ * limit is per-chapter rather than per-subject because a subject-wide cap of
+ * four would demand an implausible number of distinct apparatus once a
+ * discipline passes fifty topics.
+ *
+ * Like the solvability check, this lived only in the `NODE_ENV !== 'production'`
+ * block in `lib/curriculum.js` and so never ran during a real build.
+ */
+function checkChapterVariety(limit = 4) {
+  const perChapter = new Map();
+  for (const { chapterId, lab, slug } of authored) {
+    const counts = perChapter.get(chapterId) ?? new Map();
+    counts.set(lab, [...(counts.get(lab) ?? []), slug]);
+    perChapter.set(chapterId, counts);
+  }
+
+  for (const [chapterId, counts] of perChapter) {
+    for (const [lab, slugs] of counts) {
+      if (slugs.length > limit) {
+        errors.push(
+          `${chapterId}: ${slugs.length} topics share the "${lab}" apparatus (limit ${limit}) — ${slugs.join(', ')}`,
+        );
+      }
+    }
+  }
 }
 
 /**
@@ -228,6 +265,54 @@ function validateLegacyBalance(topic, fail) {
   else if (control.min >= control.max) fail(`model.control range is inverted (${control.min} >= ${control.max})`);
   if (control.precision !== undefined && !Number.isInteger(control.precision)) {
     fail('model.control.precision must be an integer');
+  }
+
+  checkSolvable(topic, fail);
+}
+
+/**
+ * Does the mission actually have a findable answer?
+ *
+ * This is the check that matters most and the one that was missing. The two
+ * failures it catches are both invisible to every other gate:
+ *
+ *   - the solved value sits outside the slider's range, so the learner can move
+ *     the control from end to end and never balance the equation;
+ *   - the mission opens already balanced, so there is nothing to solve.
+ *
+ * `lib/curriculum.js` has always asserted both, but behind
+ * `NODE_ENV !== 'production'` — which means it does not run during `next build`,
+ * where NODE_ENV is production by definition. A broken mission therefore passed
+ * prebuild, passed the build, and shipped. That was survivable while the
+ * catalogue was 100 hand-checked topics and is not survivable as it grows.
+ *
+ * Kept here rather than un-guarding the dev block: this script is the gate both
+ * CI and a local `vercel --prod` already pass through, and it fails with a
+ * message naming the topic instead of throwing at module scope.
+ */
+function checkSolvable(topic, fail) {
+  let model;
+  try {
+    model = createModel(topic.model);
+  } catch (error) {
+    fail(`model could not be constructed: ${error.message}`);
+    return;
+  }
+
+  if (!Number.isFinite(model.solvedValue)) {
+    fail(`solved value is ${model.solvedValue} — the parameters do not yield a real answer`);
+    return;
+  }
+
+  if (!model.isReachable) {
+    fail(
+      `solved value ${model.solvedValue} sits at ${model.solvedPercent.toFixed(1)}% of the slider, `
+      + `outside the reachable 2-98% band (control range ${topic.model.control.min}-${topic.model.control.max})`,
+    );
+  }
+
+  if (model.evaluate(topic.model.start).balanced) {
+    fail(`starts already balanced at ${topic.model.start}%, so there is no puzzle to solve`);
   }
 }
 
