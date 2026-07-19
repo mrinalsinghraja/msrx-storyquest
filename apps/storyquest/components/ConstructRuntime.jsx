@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import StoryQuestShell from './StoryQuestShell';
 import CompletionCard from './CompletionCard';
+import { CLOCK_ZERO } from '../lib/clock';
 import { runPredicate } from '../lib/predicate';
 import { recordCompletion } from '../lib/progress';
 
@@ -27,9 +28,14 @@ export default function ConstructRuntime({ mission }) {
   /**
    * The scope a predicate is written against.
    *
-   * Four roots, matching `ALLOWED_ROOTS`. `count` is derived rather than
-   * authored so a predicate can ask "how many are in the outer shell" without
-   * the simulator having to maintain a parallel tally that could drift.
+   * Every root in `ALLOWED_ROOTS`. `count` is derived rather than authored so a
+   * predicate can ask "how many are in the outer shell" without the simulator
+   * having to maintain a parallel tally that could drift.
+   *
+   * `clock` is supplied as a stopped clock. A construct simulator has no loop —
+   * the artifact is built, not evolving — but the root is in the shared grammar,
+   * so passing it keeps `clock.t` a readable zero instead of a throw from a
+   * predicate that mentions it by mistake.
    */
   const scope = useMemo(() => {
     const byId = Object.fromEntries(slots.map((slot) => [slot.id, slot.items]));
@@ -38,6 +44,7 @@ export default function ConstructRuntime({ mission }) {
       count: Object.fromEntries(slots.map((slot) => [slot.id, slot.items.length])),
       built: slots.map((slot) => slot.items.length),
       target: spec.target ?? {},
+      clock: CLOCK_ZERO,
     };
   }, [pool, slots, spec.target]);
 

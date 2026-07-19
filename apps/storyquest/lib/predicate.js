@@ -17,8 +17,15 @@
  * bundle and lets the `.mjs` validator load it directly.
  */
 
-/** The only roots a predicate may read. */
-export const ALLOWED_ROOTS = ['state', 'count', 'built', 'target'];
+/**
+ * The only roots a predicate may read.
+ *
+ * `clock` is `{ t, frame, dt, isPlaying }` from `lib/clock.js` and lets an
+ * `explore` projection describe motion — `state.amplitude * clock.t` — instead
+ * of only a static reading. Every runtime supplies it, including the ones with
+ * no loop, so a predicate never has to guard against it being absent.
+ */
+export const ALLOWED_ROOTS = ['state', 'count', 'built', 'target', 'clock'];
 
 export const ALLOWED_OPERATORS = [
   '===', '!==', '==', '!=', '<', '<=', '>', '>=',

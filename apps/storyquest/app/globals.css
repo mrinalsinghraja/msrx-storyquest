@@ -1047,6 +1047,43 @@
 
 .explore-window { color: var(--ink-3); margin-left: auto; }
 
+/* The transport sits on the rule under the readout: a running simulation and a
+ * paused one must never look the same, and the elapsed time is the only
+ * evidence of that from across the room. */
+.explore-clock {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  margin-top: var(--s3);
+}
+
+.explore-transport {
+  padding: var(--s1) var(--s3);
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: border-color var(--lift), color var(--lift);
+}
+
+.explore-transport:hover:not(:disabled) { border-color: var(--pigment); color: var(--pigment); }
+.explore-transport:disabled { opacity: 0.4; cursor: default; }
+
+.explore-elapsed {
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+
+/* A pulse on the elapsed readout, only while the clock is actually running.
+ * One breathing element is the whole motion budget for this panel. */
+.explore[data-running] .explore-elapsed { animation: explore-tick 2s ease-in-out infinite; }
+
+@keyframes explore-tick {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+
 .explore-hold {
   display: flex;
   flex-direction: column;
@@ -1178,7 +1215,12 @@
   .apparatus .explore-value,
   .apparatus .explore-hold .data,
   .apparatus .explore-meter > span,
+  .apparatus .explore-transport,
   .apparatus .explore-option { transition: none; }
+
+  /* The simulation keeps running under reduced motion — the motion is the
+   * lesson. Only the decorative pulse on the readout stops. */
+  .apparatus .explore[data-running] .explore-elapsed { animation: none; }
 
   .catalogue .plate:hover { transform: none; }
   .catalogue .plate:hover .plate-cta span { transform: none; }

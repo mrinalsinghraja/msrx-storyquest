@@ -280,6 +280,20 @@ function validateExplore(engine, fail) {
     return;
   }
 
+  // The projection is what the runtime measures. It goes through the same AST
+  // walk as a predicate because it is the same grammar and the same interpreter
+  // — and because a projection that does not compile leaves the readout stuck
+  // on "—" with nothing in the console to say why.
+  if (!isNonEmptyString(engine.projection)) {
+    fail('explore engine requires a projection expression string');
+  } else {
+    checkPredicate(engine.projection, fail);
+  }
+
+  if (!Array.isArray(engine.controls) || engine.controls.length === 0) {
+    fail('explore engine requires at least one control');
+  }
+
   const regime = validation.regime;
   if (!regime || typeof regime !== 'object') {
     fail('explore engine requires a validation.regime');
@@ -288,6 +302,21 @@ function validateExplore(engine, fail) {
     if (!isNonEmptyString(regime.reaches)) fail('regime.reaches is missing');
     if (!Number.isInteger(regime.withinSteps) || regime.withinSteps <= 0) {
       fail('regime.withinSteps must be a positive integer');
+    }
+    if (regime.sustainFor !== undefined && (!Number.isInteger(regime.sustainFor) || regime.sustainFor <= 0)) {
+      fail('regime.sustainFor must be a positive integer number of samples');
+    }
+    if (regime.sustainFor !== undefined && Number.isInteger(regime.withinSteps)
+      && regime.sustainFor > regime.withinSteps) {
+      // The tracker marks the run exhausted at `withinSteps`, so a hold longer
+      // than the budget can never be completed.
+      fail(`regime.sustainFor (${regime.sustainFor}) exceeds withinSteps (${regime.withinSteps}), so the hold is unreachable`);
+    }
+
+    // Samples per second for the frame loop. `sustainFor` is counted in
+    // samples, so this is the only thing that turns it into a duration.
+    if (regime.sampleHz !== undefined && (!isFiniteNumber(regime.sampleHz) || regime.sampleHz <= 0 || regime.sampleHz > 60)) {
+      fail('regime.sampleHz must be a finite rate between 0 and 60 samples per second');
     }
   }
 
